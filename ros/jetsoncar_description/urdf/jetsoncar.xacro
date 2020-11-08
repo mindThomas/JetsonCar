@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<robot name="jetsoncar" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--
+ 1. Create model with URDF: http://wiki.ros.org/urdf/Tutorials/Create%20your%20own%20urdf%20file
+ 2. Add controllable joints: http://wiki.ros.org/urdf/Tutorials/Building%20a%20Movable%20Robot%20Model%20with%20URDF
+ 3. Physical properties: http://wiki.ros.org/urdf/Tutorials/Adding%20Physical%20and%20Collision%20Properties%20to%20a%20URDF%20Model or http://gazebosim.org/tutorials/?tut=ros_urdf
+ 4. Use Macros: http://wiki.ros.org/urdf/Tutorials/Using%20Xacro%20to%20Clean%20Up%20a%20URDF%20File
+ 5. Link to Gazebo: http://wiki.ros.org/urdf/Tutorials/Using%20a%20URDF%20in%20Gazebo
+-->
+
+<!-- Inspired from https://github.com/DJTobias/Cherry-Autonomous-Racecar/blob/master/urdf/car.urdf
+     and https://github.com/mit-racecar/racecar-simulator/blob/master/racecar_description/urdf/racecar.xacro
+-->
+
+    <xacro:arg name="disable_joints" default="false"/>    
+
+	<xacro:include filename="$(find jetsoncar_description)/urdf/parameters.xacro" />	
+	<xacro:include filename="$(find jetsoncar_description)/urdf/physical.xacro" />
+	<xacro:include filename="$(find jetsoncar_description)/urdf/joints.xacro" />	
+	<xacro:include filename="$(find jetsoncar_description)/urdf/materials.xacro" />
+
+	<link name="footprint"/>
+
+	<link name="base_link">
+		<visual>
+			<material name="acrylic"/>
+			<xacro:baseplate_geometry/>
+		</visual>
+	</link>
+	<xacro:fixed_offset_joint parent="footprint" child="base_link" offset="0 0 ${baseplate_to_wheel_center+wheel_diameter/2}"/>
+
+    <xacro:if value="${enable_imu}">
+        <link name="imu_link">
+            <visual>
+                <material name="grey"/>
+                <origin xyz="0.0136 -0.015 0.012" rpy="-${pi/2} 0 -${pi/2}" />
+                <!--<xacro:imu_geometry/>-->
+                <geometry>
+                    <mesh filename="package://jetsoncar_description/models/spatial.dae" scale="1.0 1.0 1.0"/>
+                </geometry>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+            </visual>            
+        </link>
+        <xacro:fixed_offset_joint_rpy parent="base_link" child="imu_link" offset="0 0 ${imu_height/2}" rpy="${pi} 0 0"/> <!-- because origin is in the center, we want the IMU to stand on the baseplate -->
+        <gazebo reference="imu">
+        </gazebo>
+    </xacro:if>
+
+	<link name="front_mount">
+		<visual>
+			<material name="grey"/>
+			<xacro:front_mount_geometry/>
+		</visual>
+	</link>
+	<xacro:fixed_offset_joint parent="base_link" child="front_mount" offset="${front_to_rear_wheel_center/4} 0 -${baseplate_to_wheel_center/2}"/>
+
+	<link name="rear_mount">
+		<visual>
+			<material name="grey"/>
+			<xacro:rear_mount_geometry/>
+		</visual>
+	</link>
+	<xacro:fixed_offset_joint parent="base_link" child="rear_mount" offset="-${front_to_rear_wheel_center/4} 0 -${baseplate_to_wheel_center/2}"/>
+
+	<link name="front_shaft">
+		<visual>
+			<material name="black"/>
+			<xacro:shaft_geometry/>
+		</visual>
+	</link>
+	<xacro:fixed_offset_joint parent="front_mount" child="front_shaft" offset="${front_to_rear_wheel_center/4} 0 -${baseplate_to_wheel_center/2}"/>
+	<!--<xacro:dampener_joint parent="front_mount" child="front_shaft" offset="${front_to_rear_wheel_center/4} 0 -${baseplate_to_wheel_center/2}"/> I can not get the dampener joint to work properly. The car seems to be bouncing around, like the spring is too hard and dampening is too little. I already tried adjusting several parameters. -->
+
+	<link name="rear_shaft">
+		<visual>
+			<material name="black"/>
+			<xacro:shaft_geometry/>
+		</visual>
+	</link>
+	<xacro:fixed_offset_joint parent="rear_mount" child="rear_shaft" offset="-${front_to_rear_wheel_center/4} 0 -${baseplate_to_wheel_center/2}"/>
+	<!-- <xacro:dampener_joint parent="rear_mount" child="rear_shaft" offset="-${front_to_rear_wheel_center/4} 0 -${baseplate_to_wheel_center/2}"/> I can not get the dampener joint to work properly. The car seems to be bouncing around, like the spring is too hard and dampening is too little. I already tried adjusting several parameters. -->
+
+
+	<link name="front_right_hinge">
+		<visual>
+			<material name="white"/>
+			<xacro:hinge_geometry/>
+		</visual>
+	</link>
+	<xacro:hinge_joint parent="front_shaft" child="front_right_hinge" offset="0 -${left_to_right_wheel_center/2} 0"/>	
+
+	<link name="front_left_hinge">
+		<visual>
+			<material name="white"/>
+			<xacro:hinge_geometry/>
+		</visual>
+	</link>
+	<xacro:hinge_joint parent="front_shaft" child="front_left_hinge" offset="0 ${left_to_right_wheel_center/2} 0"/>	
+
+	<link name="front_right_wheel">
+		<visual>
+			<material name="black"/>
+			<xacro:wheel_geometry/>
+		</visual>
+	</link>
+	<xacro:wheel_joint parent="front_right_hinge" child="front_right_wheel" offset="0 0 0"/>	
+
+	<link name="front_left_wheel">
+		<visual>
+			<material name="black"/>
+			<xacro:wheel_geometry/>
+		</visual>
+	</link>
+	<xacro:wheel_joint parent="front_left_hinge" child="front_left_wheel" offset="0 0 0"/>	
+
+	<link name="rear_right_wheel">
+		<visual>
+			<material name="black"/>
+			<xacro:wheel_geometry/>
+		</visual>
+	</link>
+	<xacro:wheel_joint parent="rear_shaft" child="rear_right_wheel" offset="0 -${left_to_right_wheel_center/2} 0"/>	
+
+	<link name="rear_left_wheel">
+		<visual>
+			<material name="black"/>
+			<xacro:wheel_geometry/>
+		</visual>
+	</link>
+	<xacro:wheel_joint parent="rear_shaft" child="rear_left_wheel" offset="0 ${left_to_right_wheel_center/2} 0"/>
+
+	<!-- Sensors -->
+	<xacro:if value="${enable_front_camera}">
+		<link name="camera_mount">
+			<visual>
+				<material name="blue"/>
+				<xacro:camera_mount_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="base_link" child="camera_mount" offset="${baseplate_length/2-baseplate_frontedge_to_camera} 0 ${baseplate_thickness}"/>
+
+		<link name="camera">
+			<visual>
+				<material name="blue"/>
+				<xacro:camera_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="camera_mount" child="camera" offset="0 0 ${camera_mount_height+camera_height/2}"/>
+	</xacro:if>
+
+	<xacro:if value="${enable_dual_camera}">
+		<link name="left_camera_mount">
+			<visual>
+				<material name="blue"/>
+				<xacro:camera_mount_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="base_link" child="left_camera_mount" offset="${baseplate_length/2-baseplate_frontedge_to_camera} ${camera_disparity/2} ${baseplate_thickness}"/>
+
+		<link name="left_camera">
+			<visual>
+				<material name="blue"/>
+				<xacro:camera_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="left_camera_mount" child="left_camera" offset="0 0 ${camera_mount_height+camera_height/2}"/>
+
+		<link name="right_camera_mount">
+			<visual>
+				<material name="blue"/>
+				<xacro:camera_mount_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="base_link" child="right_camera_mount" offset="${baseplate_length/2-baseplate_frontedge_to_camera} -${camera_disparity/2} ${baseplate_thickness}"/>
+
+		<link name="right_camera">
+			<visual>
+				<material name="blue"/>
+				<xacro:camera_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="right_camera_mount" child="right_camera" offset="0 0 ${camera_mount_height+camera_height/2}"/>
+	</xacro:if>
+
+	<xacro:if value="${enable_lidar}">
+		<!--<link name="lidar_mount">
+			<visual>
+				<material name="red"/>
+				<xacro:lidar_mount_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="base_link" child="lidar_mount" offset="0 0 ${baseplate_thickness}"/>-->
+		<link name="lidar">
+			<visual>
+				<material name="red"/>
+				<xacro:lidar_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint_rpy parent="base_link" child="lidar" offset="0 0 ${baseplate_thickness+lidar_height/2}" rpy="0 0 ${pi}"/>
+	</xacro:if>
+
+	<xacro:if value="${enable_range_sensors}">
+		<link name="ranger_front_left">
+			<visual>
+				<material name="white"/>
+				<xacro:ranger_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="base_link" child="ranger_front_left" offset="${baseplate_length/2} -${camera_disparity/2} ${baseplate_thickness/2}"/>
+
+		<link name="ranger_front_right">
+			<visual>
+				<material name="white"/>
+				<xacro:ranger_geometry/>
+			</visual>
+		</link>
+		<xacro:fixed_offset_joint parent="base_link" child="ranger_front_right" offset="${baseplate_length/2} ${camera_disparity/2} ${baseplate_thickness/2}"/>
+	</xacro:if>
+
+    <xacro:if value="${enable_realsense}">
+        <!-- Add realsense camera links -->
+        <xacro:include filename="$(find realsense2_description)/urdf/_d435.urdf.xacro" />
+        <!--<link name="realsense_d435_link">
+            <visual>       
+                <material name="lightgrey"/>             
+                <geometry>
+                    <mesh filename="package://jetsoncar_description/models/realsense_camera/meshes/d435.dae"/>
+                </geometry>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+            </visual>
+        </link>-
+        <xacro:fixed_offset_joint_rpy parent="base_link" child="realsense_d435_link" offset="${baseplate_length/2-baseplate_frontedge_to_camera} 0 ${baseplate_thickness+camera_mount_height+camera_height/2}" rpy="0 0 0" />-->
+
+        <!-- RealSense D435 screwed into baseplate through bottom screw hole.
+             RealSense T265 mounted to D435 through backside screw holes
+             
+             TF Tree: baseplate -> D435 bottom screw -> D435 link -> D435 mount center -> T265 mount center -> T265 link
+        -->
+
+        <!-- Do not use the nominal extrinsics between camera frames. Instead rely on the calibrated extrinsics being published by running the camera node -->
+        <xacro:sensor_d435 parent="base_link" name="realsense_d435" use_nominal_extrinsics="false">            
+            <origin xyz="${baseplate_length/2-baseplate_frontedge_to_camera} 0 ${baseplate_thickness+camera_mount_height+camera_height/2}" rpy="0 0 0"/>
+        </xacro:sensor_d435>
+
+        <link name="realsense_d435_mount_center"/>
+        <xacro:fixed_offset_joint_rpy parent="realsense_d435_link" child="realsense_d435_mount_center" offset="${0.0042-0.02505} -0.0175 0" rpy="0 0 0" />  
+
+        <link name="realsense_t265_mount_center">
+            <visual>
+                <material name="white"/>
+                <xacro:camera_bracket_geometry/>
+            </visual>
+        </link>
+        <xacro:fixed_offset_joint_rpy parent="realsense_d435_mount_center" child="realsense_t265_mount_center" offset="0 0 0.030" rpy="0 0 0" />   
+
+        <link name="realsense_t265_link">
+            <visual>
+                    <material name="lightgrey"/>
+                    <geometry>
+                        <mesh filename="package://jetsoncar_description/models/realsense_camera/meshes/t265.stl" scale="0.001 0.001 0.001"/>
+                    </geometry>         
+                    <origin rpy="${pi/2} 0 ${pi/2}" xyz="0.00655 0 0"/>                
+            </visual>
+        </link>
+        <xacro:fixed_offset_joint_rpy parent="realsense_t265_mount_center" child="realsense_t265_link" offset="0.00595 0.0091 0" rpy="0 0 0" />         
+
+       
+
+       
+    </xacro:if>
+</robot>

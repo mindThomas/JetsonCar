@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="publish_tf" default="true" />
+    <arg name="enable_position_fusion" default="false" />
+    <arg name="enable_heading_fusion" default="false" />
+    <arg name="odom_in_topic" default="imu/odom_in" />
+
+    <node name="imu_node" pkg="jetsoncar_sensors" type="imu_node" output="screen" required="true">
+        <param name="raw_data_rate"       type="int"    value="100"/>
+        <param name="estimate_data_rate"  type="int"    value="100"/>
+
+        <param name="publish_tf"          type="bool"   value="$(arg publish_tf)"/>
+
+        <param name="world_frame"         type="str"    value="world"/>
+        <param name="imu_frame"           type="str"    value="imu_link"/>
+        <param name="position_imu_frame"  type="str"    value="imu"/> <!-- mainly for visualization -->
+
+        <param name="enable_position_fusion"   type="bool"    value="$(arg enable_position_fusion)"/>
+        <param name="enable_heading_fusion"    type="bool"    value="$(arg enable_heading_fusion)"/>
+        <param name="odom_downsample_rate"     type="int"     value="10"/>
+        <param name="odom_position_stddev_m"   type="double"  value="0.1"/>
+        <param name="odom_heading_stddev_deg"  type="double"  value="1.0"/>
+
+        <remap from="imu/odom_in" to="$(arg odom_in_topic)" />
+    </node>
+
+</launch>

@@ -1,0 +1,19 @@
+PCLVisualizer comes with a bunch of default keyboard actions:
+
+          p, P   : switch to a point-based representation
+          w, W   : switch to a wireframe-based representation (where available)
+          s, S   : switch to a surface-based representation (where available)
+
+          j, J   : take a .PNG snapshot of the current window view
+          c, C   : display current camera/window parameters
+          f, F   : fly to point mode
+
+          e, E   : exit the interactor
+          q, Q   : stop and call VTK's TerminateApp
+
+           +/-   : increment/decrement overall point size
+     +/- [+ ALT] : zoom in/out
+
+          g, G   : display scale grid (on/off)
+          u, U   : display lookup table (on/off)
+

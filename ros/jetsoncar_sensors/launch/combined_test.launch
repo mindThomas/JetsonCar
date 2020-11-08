@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find jetsoncar_sensors)/launch/t265.launch"/>
+    <include file="$(find jetsoncar_sensors)/launch/zed.launch"/>
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/zed_t265_combined.rviz" output="screen" />
+</launch>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<launch>
+	<node name="octomap_server" pkg="octomap_server" type="octomap_server_node">
+		<remap from="cloud_in" to="/zed/zed_node/point_cloud/cloud_registered" />
+		<param name="frame_id" type="string" value="map" />
+		<param name="sensor_model/max_range" value="5.0" />
+		<param name="latch" value="false" />
+		<param name="resolution" value="0.1" />
+	</node>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/octomap_test.rviz" />
+</launch>

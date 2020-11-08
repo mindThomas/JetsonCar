@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+		<arg name="rtabmap_args" value="
+--udebug
+--logfile log1.txt
+--delete_db_on_start
+--RGBD/LoopClosureReextractFeatures true
+--Mem/ImagePreDecimation 0 
+--Mem/ImagePostDecimation 0 
+--Rtabmap/DetectionRate 0 
+--Rtabmap/ImageBufferSize 0 
+--Kp/DetectorStrategy 0 
+--Vis/BundleAdjustment 1
+--Vis/CorGuessMatchToProjection false
+--Vis/CorGuessWinSize 20
+--Vis/CorNNDR 0.6 
+--Vis/CorNNType 1
+--Vis/CorType 0
+--Vis/DepthAsMask true
+--Vis/EpipolarGeometryVar 0.02
+--Vis/EstimationType 1
+--Vis/FeatureType 0
+--Vis/ForwardEstOnly true
+--Vis/GridCols 1
+--Vis/GridRows 1
+--Vis/InlierDistance 0.1
+--Vis/Iterations 300
+--Vis/MaxDepth 3.0
+--Vis/MaxFeatures 1000
+--Vis/MinDepth 0.5
+--Vis/MinInliers 25
+--Vis/PnPFlags 0
+--Vis/PnPRefineIterations 0
+--Vis/PnPReprojError 2
+--Vis/RefineIterations 5
+--Vis/SubPixEps 0.02
+--Vis/SubPixIterations 0
+--Vis/SubPixWinSize 3
+--SURF/HessianThreshold 100
+"/>
+		<arg name="visual_odometry" value="false"/>
+		<arg name="odom_frame_id" value="odom"/>
+		<arg name="odom_topic" value="/zed/zed_node/odom"/>
+		<arg name="frame_id" value="base_link"/>
+		<arg name="rgb_topic" value="/zed/zed_node/rgb/image_rect_color"/>
+		<arg name="depth_topic" value="/zed/zed_node/depth/depth_registered"/>
+		<arg name="camera_info_topic" value="/zed/zed_node/rgb/camera_info"/>
+		<arg name="compressed" value="true"/>
+		<arg name="depth_image_transport" value="raw"/>
+		<arg name="approx_sync" value="false"/>
+        <arg name="queue_size" value="20"/>
+        <arg name="wait_for_transform" value="1.0"/>
+		<arg name="localization" value="false"/>
+		<arg name="odom_tf_angular_variance" value="0.0001"/>
+		<arg name="odom_tf_linear_variance" value="0.0001"/>
+	</include>
+
+</launch>

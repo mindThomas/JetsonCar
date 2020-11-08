@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- urdf xml robot description loaded on the Parameter Server (for use in RViz) - this also converts the xacro into a proper urdf file -->
+    <!-- Launch the xacro with disable_joints:=true to disable the dynamic joints and fix them. This allows us to use the same robot description without running the driver (which sets the transform of hinges and wheels) -->
+	<param name="robot_description" command="$(find xacro)/xacro '$(find jetsoncar_description)/urdf/jetsoncar.xacro' disable_joints:=true" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+    <!-- Publish static odom transform -->
+    <node pkg="tf" type="static_transform_publisher" name="world_odom" args="0 0 0 0 0 0 /odom /footprint 100"/>
+
+</launch>

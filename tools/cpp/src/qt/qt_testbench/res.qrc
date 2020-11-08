@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/images/v6plus_top.png</file>   
+        <file>shaders/simple.frag</file>
+        <file>shaders/simple.vert</file>   
+    </qresource>
+</RCC>

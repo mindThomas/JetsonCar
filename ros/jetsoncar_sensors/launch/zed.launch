@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="launch_rviz"           default="false" />
+
+    <!-- Publish ZED urdf -->
+    <arg name="publish_urdf"          default="true" />
+
+    <!-- Position respect to base frame (i.e. "base_link) -->
+    <arg name="cam_pos_x"             default="0.0" />
+    <arg name="cam_pos_y"             default="0.0" />
+    <arg name="cam_pos_z"             default="0.0" />
+
+    <!-- Orientation respect to base frame (i.e. "base_link) -->
+    <arg name="cam_roll"              default="0.0" />
+    <arg name="cam_pitch"             default="0.0" />
+    <arg name="cam_yaw"               default="0.0" />
+
+    <group ns="zed">
+        <!-- ROS URDF description of the ZED -->
+        <group if="$(arg publish_urdf)">
+            <param name="zed_description"
+                   command="$(find xacro)/xacro '$(find zed_wrapper)/urdf/zed_descr.urdf.xacro'
+                            camera_name:=zed
+                            camera_model:=zed
+                            base_frame:=base_link
+                            cam_pos_x:=$(arg cam_pos_x)
+                            cam_pos_y:=$(arg cam_pos_y)
+                            cam_pos_z:=$(arg cam_pos_z)
+                            cam_roll:=$(arg cam_roll)
+                            cam_pitch:=$(arg cam_pitch)
+                            cam_yaw:=$(arg cam_yaw)"
+            />
+    
+            <node name="zed_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen" required="true">
+                <remap from="robot_description" to="zed_description" />
+            </node>
+        </group>
+    
+        <node name="zed_node" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true">
+            <rosparam file="$(find jetsoncar_sensors)/launch/zed_slam.yaml" command="load" />
+    
+            <!-- Camera name -->
+            <param name="general/camera_name" value="zed" />
+    
+            <!-- Base frame -->
+            <param name="general/base_frame" value="base_link" />
+    
+            <!-- SVO file path -->
+            <param name="svo_file" value="" />
+    
+            <!-- Remote stream -->
+            <param name="stream" value="" />
+    
+            <!-- Camera ID -->
+            <param name="general/zed_id" value="0" />
+    
+            <!-- GPU ID -->
+            <param name="general/gpu_id" value="-1" />
+        </node>
+    
+        <group if="$(arg launch_rviz)">
+            <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/zed.rviz" output="screen" />
+        </group>
+    </group>
+</launch>

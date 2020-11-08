@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- Minimal launch file for physical robot bringup -->
+
+	<include file="$(find jetsoncar_driver)/launch/driver.launch">
+		<arg name="serial_port" value="/dev/jetsoncar" />            
+        <arg name="open_reconfigure" value="false" /> <!-- Do not open reconfigure GUI on onboard computer -->
+        <!--        
+        <arg name="wheel_radius" value="0.0775" />
+        <arg name="front_to_rear_wheel_distance" value="0.42" />
+        <arg name="left_to_right_wheel_distance" value="0.285" />
+        <arg name="min_steering" value="0.003" />
+        <arg name="max_steering" value="0.8" />
+        -->    		
+	</include>
+
+</launch>

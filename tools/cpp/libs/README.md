@@ -1,0 +1,1 @@
+This folder contain the libraries that are only used for the `tools` and not by the ROS nodes.

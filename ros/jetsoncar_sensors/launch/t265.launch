@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="camera"              default="realsense"/>
+  <arg name="launch_rviz"         default="true" />
+
+  <!--
+    RS2_OPTION_ENABLE_MAPPING = Use an on device map (recommended)
+    RS2_OPTION_ENABLE_RELOCALIZATION = Use appearance based relocalization (depends on mapping)
+    RS2_OPTION_ENABLE_POSE_JUMPING = Allow pose jumping (depends on mapping)
+    RS2_OPTION_ENABLE_DYNAMIC_CALIBRATION = Enable dynamic calibration (recommended)
+    RS2_OPTION_ENABLE_MAP_PRESERVATION = Preserve the map from the previous run as if it was loaded
+  -->
+  <rosparam>
+      /camera/tracking_module/enable_auto_exposure: true
+      /camera/tracking_module/enable_mapping: true
+      /camera/tracking_module/enable_relocalization: true
+      /camera/tracking_module/enable_pose_jumping: true
+      /camera/tracking_module/enable_dynamic_calibration: true
+      /camera/tracking_module/enable_map_preservation: false
+  </rosparam>
+  <group ns="$(arg camera)">
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+    <arg name="device_type"         value="t265"/>
+    
+    <arg name="tf_prefix"           value="$(arg camera)"/>
+
+    <arg name="fisheye_width"       value="848"/> 
+    <arg name="fisheye_height"      value="800"/>
+    <arg name="enable_fisheye1"     value="true"/>
+    <arg name="enable_fisheye2"     value="true"/>
+
+    <arg name="fisheye_fps"         value="30"/>
+
+    <arg name="gyro_fps"            value="200"/>
+    <arg name="accel_fps"           value="62"/>
+    <arg name="enable_gyro"         value="true"/>
+    <arg name="enable_accel"        value="true"/>
+
+    <arg name="enable_sync"         value="false"/>
+
+    <arg name="linear_accel_cov"    value="0.01"/>
+    <arg name="initial_reset"       value="false"/>
+    <arg name="unite_imu_method"    value="none"/> <!-- Options are: [none, copy, linear_interpolation] -->
+
+    <arg name="publish_odom_tf"     value="true"/> <!-- whether or not to publish transform to TF tree -->
+
+    <arg name="topic_odom_in"       value="$(arg camera)/odom_in"/> <!-- To provide odometry input into the camera to aid the internal SLAM: https://github.com/IntelRealSense/realsense-ros/blob/c2d3fafa76cad06f474d010205eb55582f517d40/realsense2_camera/src/t265_realsense_node.cpp#L61-L70 -->
+    <arg name="calib_odom_file"     value=""/>
+    </include>
+  </group>
+
+  <group if="$(arg launch_rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/t265_path.rviz" required="false" />
+  </group>
+</launch>
