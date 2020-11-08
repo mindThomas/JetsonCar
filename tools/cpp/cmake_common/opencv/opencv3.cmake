@@ -1,6 +1,9 @@
 # Add custom OpenCV build paths
 #set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}  /path/to/opencv-3.0.0/install/share/OpenCV)
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}  /home/thomas/repos/opencv-3.4.3/install/share/OpenCV)
+set(OPENCV_SEARCH_PATH ~/repos/opencv-3.4.3/install/share/OpenCV)
+list(APPEND CMAKE_MODULE_PATH "${OPENCV_SEARCH_PATH}")
+list(APPEND CMAKE_PREFIX_PATH "${OPENCV_SEARCH_PATH}")
+message(STATUS "OpenCV search path: ${OPENCV_SEARCH_PATH}")
 
 # check the existance of OpenCV, if not/outdated, install/reinstall
 find_package(OpenCV 3.0 REQUIRED)

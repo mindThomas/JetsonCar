@@ -18,7 +18,7 @@ else()
 	if (${ACADO_FOUND})
 		message(STATUS "Successfully installed ACADO found")
 	else()
-		message(STATUS "Could not install nor find ACADO")
+		message(FATAL_ERROR "Could not install nor find ACADO")
 	endif()
 	
 endif()

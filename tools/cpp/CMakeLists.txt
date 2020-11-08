@@ -99,6 +99,7 @@ include(cmake_common/yaml/yaml.cmake)
 include(cmake_common/easy_profiler/easy_profiler.cmake) # profiling tool
 include(cmake_common/openblas/openblas.cmake)
 include(cmake_common/acado/acado.cmake) # for MPC code generation
+include(cmake_common/acados/acados.cmake) # for MPC code generation
 include(cmake_common/mrpt/mrpt.cmake)
 include(cmake_common/g2o/g2o.cmake)
 include(cmake_common/apriltag/apriltag.cmake)
