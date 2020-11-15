@@ -33,10 +33,8 @@ cd ~/ros_ws/src
 catkin_init_workspace
 
 # Create symlinks to necessary folders from the cloned repository
-mkdir src
-cd src
 ln -s <path to JetsonCar repo>/ros ./jetsoncar
-ln -s <path to JetsonCar repo>/lib/cpp ./jetsoncar/jetsoncar_libraries/lib
+ln -s <path to JetsonCar repo>/lib/cpp ./lib
 
 # Cloning dependencies
 # 1. Realsense T265 ROS wrapper
@@ -62,7 +60,7 @@ cd ~/ros_ws
 catkin build
 
 # Source local ROS setup file (use setup.zsh if you are on Zsh)
-source install/setup.bash
+source devel/setup.bash
 ```
 
 # SLAM

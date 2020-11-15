@@ -1,4 +1,10 @@
+# Ignore build folder
+build/
+cmake-build-debug/
 .idea/
+.cproject
+.project
+.settings/
 
 # Prerequisites
 *.d

@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="camera"              default="realsense_d435"/>
+  <arg name="launch_rviz"         default="false" />
+
+  <group ns="$(arg camera)">
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+        <arg name="device_type"       value="d435"/>
+        <arg name="initial_reset"     value="false"/>
+
+        <arg name="tf_prefix"         value="$(arg camera)"/>
+
+        <arg name="enable_pointcloud" value="true"/>
+        <arg name="enable_sync"       value="true"/>
+        <arg name="align_depth"       value="true"/>
+
+        <arg name="depth_width"       value="640"/>
+        <arg name="depth_height"      value="480"/>
+        <arg name="depth_fps"         value="30"/>
+        <arg name="enable_depth"      value="true"/>
+
+        <arg name="color_width"       value="640"/>
+        <arg name="color_height"      value="480"/>
+        <arg name="color_fps"         value="30"/>
+        <arg name="enable_color"      value="true"/>
+
+        <arg name="infra_width"       value="640"/>
+        <arg name="infra_height"      value="480"/>
+        <arg name="infra_fps"         value="30"/>
+        <arg name="enable_infra1"     value="false"/>
+        <arg name="enable_infra2"     value="false"/>
+                    
+        <!-- Not applicable to D435 camera
+        <arg name="gyro_fps"          value="400"/>
+        <arg name="accel_fps"         value="250"/>
+        <arg name="enable_gyro"       value="false"/>
+        <arg name="enable_accel"      value="false"/>
+        -->
+
+        <!-- Do not enable filters
+        <arg name="filters"           value="pointcloud"/>
+        <arg name="clip_distance"     value="-2"/>
+        <arg name="linear_accel_cov"  value="0.01"/>
+        -->
+        
+        <arg name="allow_no_texture_points"   value="false"/>
+
+    </include>
+  </group>
+
+  <group if="$(arg launch_rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/d435.rviz" required="false" />
+  </group>
+</launch>

@@ -111,7 +111,8 @@ void exitHandler(int signum) {
     shouldExit = true;
 }
 
-int main(int argc, char** argv ) {
+int main(int argc, char** argv)
+{
     signal(SIGINT, exitHandler);
 
     if (!boost::filesystem::is_directory(boost::filesystem::path(std::string(getenv("HOME")) + "/jetsoncar_logs"))) {

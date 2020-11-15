@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="camera"              default="realsense"/>
-  <arg name="launch_rviz"         default="true" />
+  <arg name="camera"              default="realsense_t265"/>
+  <arg name="launch_rviz"         default="false" />
 
   <!--
     RS2_OPTION_ENABLE_MAPPING = Use an on device map (recommended)
@@ -44,7 +44,14 @@
 
     <arg name="publish_odom_tf"     value="true"/> <!-- whether or not to publish transform to TF tree -->
 
-    <arg name="topic_odom_in"       value="$(arg camera)/odom_in"/> <!-- To provide odometry input into the camera to aid the internal SLAM: https://github.com/IntelRealSense/realsense-ros/blob/c2d3fafa76cad06f474d010205eb55582f517d40/realsense2_camera/src/t265_realsense_node.cpp#L61-L70 -->
+    <!--
+    Important Notice: For wheeled robots, odometer input is a requirement for robust
+    and accurate tracking. The relevant APIs will be added to librealsense and
+    ROS/realsense in upcoming releases. Currently, the API is available in the
+    https://github.com/IntelRealSense/librealsense/blob/master/third-party/libtm/libtm/include/TrackingDevice.h#L508-L515.
+    -->
+    <!-- To provide odometry input into the camera to aid the internal SLAM: https://github.com/IntelRealSense/realsense-ros/blob/c2d3fafa76cad06f474d010205eb55582f517d40/realsense2_camera/src/t265_realsense_node.cpp#L61-L70 -->
+    <arg name="topic_odom_in"       value="$(arg camera)/odom_in"/>
     <arg name="calib_odom_file"     value=""/>
     </include>
   </group>

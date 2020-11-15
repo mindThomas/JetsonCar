@@ -88,7 +88,7 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Axes
-      Topic: /realsense/odom/sample
+      Topic: /realsense_t265/odom/sample
       Unreliable: false
       Value: true
     - Class: rviz/Axes
@@ -103,27 +103,27 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        realsense_accel_frame:
+        realsense_t265_accel_frame:
           Value: false
-        realsense_accel_optical_frame:
+        realsense_t265_accel_optical_frame:
           Value: false
-        realsense_fisheye1_frame:
+        realsense_t265_fisheye1_frame:
           Value: false
-        realsense_fisheye1_optical_frame:
+        realsense_t265_fisheye1_optical_frame:
           Value: false
-        realsense_fisheye2_frame:
+        realsense_t265_fisheye2_frame:
           Value: false
-        realsense_fisheye2_optical_frame:
+        realsense_t265_fisheye2_optical_frame:
           Value: false
-        realsense_gyro_frame:
+        realsense_t265_gyro_frame:
           Value: false
-        realsense_gyro_optical_frame:
+        realsense_t265_gyro_optical_frame:
           Value: false
-        realsense_link:
+        realsense_t265_link:
           Value: true
-        realsense_odom_frame:
+        realsense_t265_odom_frame:
           Value: true
-        realsense_pose_frame:
+        realsense_t265_pose_frame:
           Value: true
       Marker Scale: 0.5
       Name: TF
@@ -131,20 +131,20 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        realsense_odom_frame:
-          realsense_pose_frame:
-            realsense_link:
-              realsense_accel_frame:
-                realsense_accel_optical_frame:
+        realsense_t265_odom_frame:
+          realsense_t265_pose_frame:
+            realsense_t265_link:
+              realsense_t265_accel_frame:
+                realsense_t265_accel_optical_frame:
                   {}
-              realsense_fisheye1_frame:
-                realsense_fisheye1_optical_frame:
+              realsense_t265_fisheye1_frame:
+                realsense_t265_fisheye1_optical_frame:
                   {}
-              realsense_fisheye2_frame:
-                realsense_fisheye2_optical_frame:
+              realsense_t265_fisheye2_frame:
+                realsense_t265_fisheye2_optical_frame:
                   {}
-              realsense_gyro_frame:
-                realsense_gyro_optical_frame:
+              realsense_t265_gyro_frame:
+                realsense_t265_gyro_optical_frame:
                   {}
       Update Interval: 0
       Value: true
@@ -152,7 +152,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: realsense_odom_frame
+    Fixed Frame: realsense_t265_odom_frame
     Frame Rate: 30
   Name: root
   Tools:

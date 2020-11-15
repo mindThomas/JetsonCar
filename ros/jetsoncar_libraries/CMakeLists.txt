@@ -24,6 +24,15 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 find_package(CURL REQUIRED)
+find_package(easy_profiler)
+
+find_package(realsense2 REQUIRED)
+
+set(OPENCV_SEARCH_PATH "~/repos/opencv-4.3.0/install/")
+list(APPEND CMAKE_MODULE_PATH "${OPENCV_SEARCH_PATH}")
+list(APPEND CMAKE_PREFIX_PATH "${OPENCV_SEARCH_PATH}")
+message(STATUS "OpenCV search path: ${OPENCV_SEARCH_PATH}")
+find_package(OpenCV 4.3 REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -69,8 +78,13 @@ CMAKE_COMMON_LIBS_DIRECTORIES(SUBDIRS)
 set(JETSONCAR_LIBRARIES "")
 FOREACH(subdir ${SUBDIRS})
   get_filename_component(subdir_name "${subdir}" NAME)
-  set(JETSONCAR_LIBRARIES ${JETSONCAR_LIBRARIES} ${subdir_name})
+  #set(JETSONCAR_LIBRARIES ${JETSONCAR_LIBRARIES} ${subdir_name})
+  list(APPEND JETSONCAR_LIBRARIES ${subdir_name})
 ENDFOREACH()
+
+if (NOT ZED_FOUND)
+    list(REMOVE_ITEM JETSONCAR_LIBRARIES "zed") # not used for now by the ROS subsystem
+endif()
 
 ###################################
 ## catkin specific configuration ##
@@ -82,10 +96,10 @@ ENDFOREACH()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS ${library_directory} ${EIGEN3_INCLUDE_DIR}
+  INCLUDE_DIRS ${library_directory} ${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS}
   LIBRARIES ${JETSONCAR_LIBRARIES} easy_profiler
 #  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs tf
-  DEPENDS Boost CURL
+  DEPENDS Boost OpenCV CURL
 )
 
 ## OBS! The order is important. 'catkin_package' has to come before all 'add_executable' and 'add_library'!
@@ -109,7 +123,9 @@ ENDFOREACH()
 include_directories(
 # include
   ${EIGEN3_INCLUDE_DIR}
+  ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
+  ${library_directory}
 )
 
 ## Declare a C++ library

@@ -61,9 +61,9 @@
   <depend>tf2_ros</depend>
 
   <depend>jetsoncar_libraries</depend>
+  <depend>realsense2_camera</depend>
 
-  <exec_depend>zed_wrapper</exec_depend>
-  <exec_depend>realsense2_camera</exec_depend>
+  <!--<exec_depend>zed_wrapper</exec_depend>   ZED removed for now since it is not used -->  
   <exec_depend>jetsoncar_description</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->

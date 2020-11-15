@@ -22,3 +22,20 @@ If you have already cloned the repository but without the submodules (not recurs
 
 # Installation
 See the `README.md` files in the respective folders such as `ros`, `simulation` and `tools/cpp`.
+
+# Developer notes
+
+## Mount Jetson TX2 as drive
+Install the following:
+`sudo apt-get install sshfs`
+
+And create the folder:
+`sudo mkdir /mnt/jetson`
+
+Add the following to your `.bashrc` file:
+```
+alias jetsonon="sudo sshfs -o allow_other -o password_stdin jetson@jetson-car.local:/ /mnt/jetson <<< 'jetson'"
+alias jetsonoff='sudo umount /mnt/jetson'
+```
+
+Where `jetson` at the end is the password configured on the Jetson during the installation of JetPack and Ubuntu.

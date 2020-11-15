@@ -90,8 +90,8 @@ include(cmake_common/gtsam/gtsam.cmake) # also includes Eigen
 include(cmake_common/cuda.cmake)
 include(cmake_common/qt5.cmake) # MUST COME BEFORE pcl.cmake
 include(cmake_common/pcl.cmake)
-#include(cmake_common/eigen/eigen.cmake)
-include(cmake_common/opencv/opencv3.cmake)
+include(cmake_common/eigen/eigen.cmake)
+include(cmake_common/opencv/opencv4.cmake)
 include(cmake_common/pangolin/pangolin.cmake)
 include(cmake_common/qglviewer/qglviewer.cmake)
 include(cmake_common/openmp.cmake) # for code optimization
@@ -101,7 +101,7 @@ include(cmake_common/openblas/openblas.cmake)
 include(cmake_common/acado/acado.cmake) # for MPC code generation
 include(cmake_common/acados/acados.cmake) # for MPC code generation
 include(cmake_common/mrpt/mrpt.cmake)
-include(cmake_common/g2o/g2o.cmake)
+include(cmake_common/g2o/g2o.cmake) # depends on qglviewer which should thus be loaded before
 include(cmake_common/apriltag/apriltag.cmake)
 include(cmake_common/brisk/brisk.cmake)
 
@@ -112,7 +112,7 @@ find_package(Boost REQUIRED COMPONENTS system signals python thread program_opti
 mark_as_advanced(BOOST_THREAD_LIBRARY)
 
 find_package(CURL REQUIRED)
-find_package(gflags REQUIRED)
+find_package(gflags REQUIRED) # sudo apt-get install libgflags-dev
 find_package(SuiteParse REQUIRED)
 find_package(Eigen3 3.3.0 REQUIRED)
 find_package(OpenGL REQUIRED)

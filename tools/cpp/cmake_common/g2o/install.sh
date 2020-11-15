@@ -3,7 +3,7 @@
 set -e  # exit on error
 
 # Install dependencies
-sudo apt-get install libsuitesparse-dev qtdeclarative5-dev qt5-qmake libqglviewer-dev -y
+sudo apt-get install libsuitesparse-dev qtdeclarative5-dev qt5-qmake -y
 
 TMP_PATH=/tmp
 G2O_PATH=${TMP_PATH}/g2o
@@ -14,7 +14,7 @@ if [ ! -d ${G2O_PATH} ] ; then # G2O has not been downloaded does not exist
 	cd ${TMP_PATH}
 	git clone https://github.com/RainerKuemmerle/g2o
 	cd ${G2O_PATH}
-	git checkout fcba4ea # November 2019 commit
+	git checkout 6759465 # April 10 2020 release
 fi
 
 if [ ! -d ${G2O_BUILD_PATH} ] ; then # build does not exist

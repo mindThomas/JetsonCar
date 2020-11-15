@@ -17,6 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
   tf2_ros  
   jetsoncar_libraries
+  realsense2_camera  
 )
 
 ## System dependencies are found with CMake's conventions
@@ -111,7 +112,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES jetsoncar_libraries
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs tf jetsoncar_libraries
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs tf jetsoncar_libraries realsense2_camera  
 # DEPENDS Boost
 )
 	
