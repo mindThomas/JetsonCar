@@ -206,10 +206,12 @@ int capture_image(int fd)
         perror("Retrieving Frame");
         return 1;
     }
-    
-    IplImage* frame;
-    CvMat cvmat = cvMat(CAM_WIDTH, CAM_HEIGHT, CV_8UC3, (void*)buffer);
-    frame = cvDecodeImage(&cvmat, 1);
+        
+    //CvMat cvmat = cvMat(CAM_WIDTH, CAM_HEIGHT, CV_8UC3, (void*)buffer);
+    //frame = cvDecodeImage(&cvmat, 1);
+
+    cv::Mat cvmat = cv::Mat(1, buf.length, CV_8UC1, (void*)buffer);
+    cv::Mat frame = cv::imdecode(cvmat, cv::IMREAD_COLOR);
 
     //IplImage *destination = cvCreateImage(cvSize(640, 480), frame->depth, frame->nChannels);
     //cvResize(frame, destination);
@@ -224,10 +226,10 @@ int capture_image(int fd)
               << "us.\n";*/
     
     printf("FPS: %2.2f\n", 1000000.f/std::chrono::duration_cast<std::chrono::microseconds>(end - start).count());
-
-    cvNamedWindow("window",CV_WINDOW_AUTOSIZE);
-    cvShowImage("window", frame);
-    cvWaitKey(1);
+    
+    cv::namedWindow("window", cv::WINDOW_AUTOSIZE);
+    cv::imshow("window", frame);
+    cv::waitKey(1);
     //cvSaveImage("image.jpg", frame, 0);
  
     return 0;
@@ -237,7 +239,7 @@ int main()
 {
         int fd;
  
-        fd = open("/dev/video1", O_RDWR);
+        fd = open("/dev/video0", O_RDWR);
         if (fd == -1)
         {
                 perror("Opening video device");
