@@ -1,5 +1,7 @@
 #include "scene.h"
 
+#include <GL/gl.h>
+
 #include <QMouseEvent>
 #include <QOpenGLShaderProgram>
 #include <QCoreApplication>
