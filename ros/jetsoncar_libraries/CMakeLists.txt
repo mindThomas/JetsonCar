@@ -34,6 +34,17 @@ list(APPEND CMAKE_PREFIX_PATH "${OPENCV_SEARCH_PATH}")
 message(STATUS "OpenCV search path: ${OPENCV_SEARCH_PATH}")
 find_package(OpenCV 4.3 REQUIRED)
 
+## Qt5 modules needed by OpenCV
+find_package(Qt5
+      COMPONENTS        
+        Core        
+        Gui        
+        Widgets
+        Test
+        Concurrent
+        OpenGL
+      REQUIRED)
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
