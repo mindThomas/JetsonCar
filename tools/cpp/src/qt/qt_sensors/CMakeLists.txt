@@ -7,11 +7,14 @@ set(binary_dependencies    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSu
     ${PCL_LIBRARIES}
     ${OpenCV_LIBRARIES}
     QGLVisualizer
-    realsense
-    zed
-    imu
+    realsense    
+    imu    
     utils
     )
+
+if (${ZED_FOUND})    
+    list(APPEND binary_dependencies zed)
+endif()
 
 # Configure build as release (for maximum optimization) 
 #set(CMAKE_BUILD_TYPE "Release")

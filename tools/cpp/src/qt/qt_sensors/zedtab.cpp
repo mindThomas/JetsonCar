@@ -1,3 +1,5 @@
+#ifdef WITH_ZED_CAMERA
+
 #include "zedtab.h"
 #include "ui_zedtab.h"
 
@@ -253,3 +255,5 @@ void ZedTab::SaveImage(bool side)
         }
     }
 }
+
+#endif

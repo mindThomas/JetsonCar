@@ -5,7 +5,10 @@
 
 #include "imu/imu.h"
 #include "realsense/realsense.h"
+
+#ifdef WITH_ZED_CAMERA
 #include "zed/zed.h"
+#endif
 
 #include "utils/utils.h"
 #include <fstream>
@@ -20,7 +23,11 @@ class LoggerTab : public QWidget
     Q_OBJECT
 
 public:
+    #ifdef WITH_ZED_CAMERA
     explicit LoggerTab(IMU * imu_, Realsense * realsense_, ZED * zed_, QWidget *parent = nullptr);
+    #else
+    explicit LoggerTab(IMU * imu_, Realsense * realsense_, QWidget *parent = nullptr);
+    #endif
     ~LoggerTab();
 
 private slots:
@@ -32,7 +39,10 @@ private:
 
     IMU * imu;
     Realsense * realsense;
+
+    #ifdef WITH_ZED_CAMERA
     ZED * zed;
+    #endif
 
     bool loggingEnabled{false};
     std::ofstream log_imu_accel;

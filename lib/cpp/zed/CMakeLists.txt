@@ -15,8 +15,7 @@ message(STATUS "   ${library_name}\t\t[${CMAKE_BUILD_TYPE}]")
 # Make a compiler flag for the current source folder path
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__SOURCE_FOLDER__='\"${CMAKE_CURRENT_SOURCE_DIR}\"'")
 
-find_package(ZED 3)
-if (${ZED_FOUND})
+if (${ZED_FOUND})    
     include_directories(${ZED_INCLUDE_DIRS})
     link_directories(${ZED_LIBRARY_DIR})
 

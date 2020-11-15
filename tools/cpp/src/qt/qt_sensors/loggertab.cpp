@@ -1,12 +1,18 @@
 #include "loggertab.h"
 #include "ui_loggertab.h"
 
+#ifdef WITH_ZED_CAMERA
 LoggerTab::LoggerTab(IMU * imu_, Realsense * realsense_, ZED * zed_, QWidget *parent) :
+#else
+LoggerTab::LoggerTab(IMU * imu_, Realsense * realsense_, QWidget *parent) :
+#endif
     QWidget(parent),
     ui(new Ui::LoggerTab),
     imu(imu_),
-    realsense(realsense_),
-    zed(zed_)
+    realsense(realsense_)
+    #ifdef WITH_ZED_CAMERA
+    , zed(zed_)
+    #endif
 {
     ui->setupUi(this);
 

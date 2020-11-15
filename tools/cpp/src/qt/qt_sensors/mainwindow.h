@@ -38,7 +38,10 @@
 #include "QGLVisualizer.h"
 #include "imu/imu.h"
 #include "realsense/realsense.h"
+
+#ifdef WITH_ZED_CAMERA
 #include "zed/zed.h"
+#endif
 
 class Vesc3DView;
 
@@ -62,6 +65,9 @@ private:
 
     IMU imu;
     Realsense realsense;
+
+    #ifdef WITH_ZED_CAMERA
     ZED zed;
+    #endif
 };
 #endif // MAINWINDOW_H

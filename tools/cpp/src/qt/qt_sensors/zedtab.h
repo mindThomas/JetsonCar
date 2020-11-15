@@ -1,6 +1,8 @@
 #ifndef ZEDTAB_H
 #define ZEDTAB_H
 
+#ifdef WITH_ZED_CAMERA
+
 #include <QWidget>
 #include <QSettings>
 #include <QDesktopWidget>
@@ -64,4 +66,5 @@ private:
     ZED * zed;
 };
 
+#endif // ZED enabled
 #endif // ZEDTAB_H
