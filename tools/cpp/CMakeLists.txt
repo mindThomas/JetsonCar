@@ -122,7 +122,7 @@ find_package(realsense2 REQUIRED) # Find librealsense2 installed package
 
 find_package(ZED 3)
 if (${ZED_FOUND})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWITH_ZED_CAMERA")
+    add_definitions("-DWITH_ZED_CAMERA")
 endif()
 
 include_directories(... ${OpenCV_INCLUDE_DIRS})

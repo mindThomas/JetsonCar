@@ -34,8 +34,8 @@ class ZedTab : public QWidget
 {
     Q_OBJECT
 
-public:
-    explicit ZedTab(ZED * zed_, QWidget *parent = nullptr);
+public:    
+    explicit ZedTab(ZED * zed_, QWidget *parent = nullptr);    
     ~ZedTab();
 
 private slots:
@@ -63,6 +63,7 @@ private:
 
     cvImage leftImage;
     cvImage rightImage;
+
     ZED * zed;
 };
 
