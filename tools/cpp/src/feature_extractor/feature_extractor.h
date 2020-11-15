@@ -29,7 +29,11 @@ private:
     cv::Ptr<cv::BRISK> brisk;
     cv::Ptr<cv::xfeatures2d::SIFT> sift;
 
+#ifndef __ARM_NEON__
     std::shared_ptr<brisk::HarrisScaleSpaceFeatureDetector> briskDetector;
+#else
+    std::shared_ptr<brisk::BriskFeatureDetector> briskDetector;
+#endif
     std::shared_ptr<brisk::BriskDescriptorExtractor> briskExtractor;
 
     std::shared_ptr<cv::BFMatcher> featureMatcher;

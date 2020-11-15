@@ -123,6 +123,7 @@ find_package(realsense2 REQUIRED) # Find librealsense2 installed package
 include_directories(... ${OpenCV_INCLUDE_DIRS})
 include_directories(... ${ACADO_INCLUDE_DIRS})
 include_directories(... ${Boost_INCLUDE_DIRS})
+include_directories(... ${realsense2_INCLUDE_DIR})
 
 link_directories(... ${OpenCV_LIBRARY_DIRS})
 link_directories(... ${Boost_LIBRARY_DIRS})

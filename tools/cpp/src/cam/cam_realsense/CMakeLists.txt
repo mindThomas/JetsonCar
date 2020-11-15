@@ -1,5 +1,5 @@
 # Edit the configuration line below to match binary needs
-set(binary_dependencies   ${OpenCV_LIBRARIES} realsense2 )
+set(binary_dependencies   ${OpenCV_LIBRARIES} ${realsense2_LIBRARY} )
 
 # Configure build as release (for maximum optimization) 
 set(CMAKE_BUILD_TYPE "Release")

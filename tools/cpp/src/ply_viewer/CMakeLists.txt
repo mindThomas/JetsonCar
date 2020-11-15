@@ -1,6 +1,6 @@
 # Edit the configuration line below to match binary needs
 set(binary_dependencies    Qt5::Core Qt5::Gui Qt5::Widgets  Qt5::PrintSupport
-    Qt5::Core Qt5::OpenGL glut GL )
+    Qt5::Core Qt5::OpenGL glut gl )
 
 # Configure build as release (for maximum optimization) 
 #set(CMAKE_BUILD_TYPE "Release")

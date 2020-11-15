@@ -1,3 +1,5 @@
+if (${ZED_FOUND})
+
 # Edit the configuration line below to match binary needs
 set(binary_dependencies   ${OpenCV_LIBRARIES}  zed )
 
@@ -10,3 +12,5 @@ prepare_binary()
 
 # But still add debug information (-g flag)
 #set_target_properties( ${folder_name} PROPERTIES COMPILE_FLAGS "-g -Wall -Wextra" )
+
+endif()

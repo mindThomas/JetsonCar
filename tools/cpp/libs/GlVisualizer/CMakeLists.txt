@@ -10,8 +10,7 @@ message(STATUS "   " ${CMAKE_CURRENT_SOURCE_DIR} "\t\t[${CMAKE_BUILD_TYPE}]")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__SOURCE_FOLDER__='\"${CMAKE_CURRENT_SOURCE_DIR}\"'")
 
 set(library_dependencies   
-  ${Pangolin_LIBRARIES}
-  ${Eigen3_LIBRARIES} 
+  ${Pangolin_LIBRARIES}  
   ${OpenCV_LIBRARIES}
   ${Boost_LIBRARIES} 
   ${PCL_LIBRARIES}

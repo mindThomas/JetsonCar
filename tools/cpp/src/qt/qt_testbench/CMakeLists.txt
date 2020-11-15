@@ -2,8 +2,7 @@
 set(binary_dependencies    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSupport
     Qt5::OpenGL
     Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras   
-    ${QGLVIEWER_LIBRARY}
-    ${Eigen_LIBRARIES}
+    ${QGLVIEWER_LIBRARY}    
     ${Boost_LIBRARIES}
     ${PCL_LIBRARIES}
     QGLVisualizer

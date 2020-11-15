@@ -1,5 +1,5 @@
 # Edit the configuration line below to match binary needs
-set(binary_dependencies   ${Eigen3_LIBRARIES} ${Boost_LIBRARIES} ${PCL_LIBRARIES} )
+set(binary_dependencies   ${Boost_LIBRARIES} ${PCL_LIBRARIES} )
 
 # Configure build as release (for maximum optimization) 
 set(CMAKE_BUILD_TYPE "Release")

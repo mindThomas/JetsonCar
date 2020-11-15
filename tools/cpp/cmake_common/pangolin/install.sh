@@ -28,7 +28,14 @@ fi
 # Create makefiles and build
 echo "Building Pangolin library"
 cd ${PANGOLIN_BUILD_PATH}
-cmake -DBUILD_TESTS=OFF -DBUILD_EXAMPLES=OFF ..
+cmake -DBUILD_TESTS=OFF \
+      -DBUILD_EXAMPLES=OFF \
+      -DBUILD_PANGOLIN_LIBREALSENSE=OFF \
+      -DBUILD_PANGOLIN_LIBREALSENSE2=OFF \
+      -DBUILD_PANGOLIN_OPENNI=OFF \
+      -DBUILD_PANGOLIN_OPENNI2=OFF \
+      -DBUILD_PANGOLIN_TELICAM=OFF \
+      ..
 cmake --build .
 
 BUILD_PATH=${PANGOLIN_BUILD_PATH}/src/libpangolin.so

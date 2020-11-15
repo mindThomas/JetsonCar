@@ -4,16 +4,16 @@
 #include <sstream>
 
 extern "C" {
-#include "apriltag.h"
-#include "tag36h11.h"
-#include "tag25h9.h"
-#include "tag16h5.h"
-#include "tagCircle21h7.h"
-#include "tagCircle49h12.h"
-#include "tagCustom48h12.h"
-#include "tagStandard41h12.h"
-#include "tagStandard52h13.h"
-#include "common/getopt.h"
+#include <apriltag/apriltag.h>
+#include <apriltag/tag36h11.h>
+#include <apriltag/tag25h9.h>
+#include <apriltag/tag16h5.h>
+#include <apriltag/tagCircle21h7.h>
+#include <apriltag/tagCircle49h12.h>
+#include <apriltag/tagCustom48h12.h>
+#include <apriltag/tagStandard41h12.h>
+#include <apriltag/tagStandard52h13.h>
+#include <apriltag/common/getopt.h>
 }
 
 // See "tools/python/image_processing/feature_extraction_test.py" for more extractor tests using OpenCV
@@ -21,9 +21,13 @@ extern "C" {
 feature_extractor::feature_extractor()
 {
     orb = cv::ORB::create(32, 1.0f, 1, 31, 0);
-    brisk = cv::BRISK::create();
+    brisk = cv::BRISK::create();    
+#ifndef __ARM_NEON__
     //cv::BRISK::Harris
-    briskDetector = std::make_shared<brisk::HarrisScaleSpaceFeatureDetector>(30, 0, 200, 400);;
+    briskDetector = std::make_shared<brisk::HarrisScaleSpaceFeatureDetector>(30, 0, 200, 400);
+#else
+    briskDetector = std::make_shared<brisk::BriskFeatureDetector>(200, 0, true);
+#endif
     briskExtractor = std::make_shared<brisk::BriskDescriptorExtractor>(true, true, brisk::BriskDescriptorExtractor::Version::briskV2);
 
     featureMatcher = std::make_shared<cv::BFMatcher>(cv::NORM_HAMMING);
