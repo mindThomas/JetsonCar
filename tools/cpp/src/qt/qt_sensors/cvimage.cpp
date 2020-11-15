@@ -70,13 +70,13 @@ void cvImage::update(cv::Mat &image)
     //conversion from Mat to QImage
     cv::Mat dest;        
     if (image.channels() == 1) { // greyscale
-        cv::cvtColor(image, dest, CV_GRAY2RGB);
+        cv::cvtColor(image, dest, cv::COLOR_GRAY2RGB);
     }
     else if (image.channels() == 3) { // BGR
-        cv::cvtColor(image, dest, CV_BGR2RGB);
+        cv::cvtColor(image, dest, cv::COLOR_BGR2RGB);
     }
     else if (image.channels() == 4) { // BGRA
-        cv::cvtColor(image, dest, CV_BGRA2RGB);
+        cv::cvtColor(image, dest, cv::COLOR_BGRA2RGB);
     }
     else {
         return; // error

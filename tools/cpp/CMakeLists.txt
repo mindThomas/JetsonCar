@@ -103,7 +103,7 @@ include(cmake_common/acados/acados.cmake) # for MPC code generation
 include(cmake_common/mrpt/mrpt.cmake)
 include(cmake_common/g2o/g2o.cmake) # depends on qglviewer which should thus be loaded before
 include(cmake_common/apriltag/apriltag.cmake)
-include(cmake_common/brisk/brisk.cmake)
+#include(cmake_common/brisk/brisk.cmake)
 
 message(STATUS "   Eigen include directory: ${EIGEN3_INCLUDE_DIR}")
 message(STATUS "   OpenCV path: ${OpenCV_INCLUDE_DIRS}")

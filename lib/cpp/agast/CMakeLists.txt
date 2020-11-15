@@ -15,10 +15,12 @@ message(STATUS "   ${library_name}\t\t[${CMAKE_BUILD_TYPE}]")
 # Make a compiler flag for the current source folder path
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__SOURCE_FOLDER__='\"${CMAKE_CURRENT_SOURCE_DIR}\"'")
 
-set(library_dependencies ${Boost_LIBRARIES} curl) # no dependencies
+set(library_dependencies        
+        ${OpenCV_LIBRARIES}        
+    )
 
 FILE(GLOB_RECURSE binary_sources_c *.c) # find all c files
-FILE(GLOB_RECURSE binary_sources_cpp *.cpp) # find all cpp files
+FILE(GLOB_RECURSE binary_sources_cpp *.cc) # find all cpp files
 FILE(GLOB_RECURSE binary_headers *.hpp) # find all hpp files
 FILE(GLOB_RECURSE general_headers *.h) # find all h files
 
@@ -31,6 +33,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
 # Add the library - change SHARED/STATIC according to the requirement
 add_library( ${library_name} STATIC ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
 target_link_libraries( ${library_name} ${library_dependencies} )
-target_include_directories( ${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS} )
+target_include_directories( ${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
 
-set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra" )
+set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror -pedantic -DHAVE_OPENCV -DAGAST_GLOG -std=c++0x" )

@@ -41,7 +41,7 @@ void QTOpenCVTest::resetPicture()
 
     //conversion from Mat to QImage
     cv::Mat dest;
-    cv::cvtColor(image, dest, CV_BGR2RGB);
+    cv::cvtColor(image, dest, cv::COLOR_BGR2RGB);
     QImage image1 = QImage((uchar*) dest.data, dest.cols, dest.rows, dest.step, QImage::Format_RGB888);
 
     pixmap = QPixmap::fromImage(image1);
@@ -71,7 +71,7 @@ void QTOpenCVTest::updatePicture()
 
     //conversion from Mat to QImage
     cv::Mat dest;
-    cv::cvtColor(image, dest, CV_BGR2RGB);
+    cv::cvtColor(image, dest, cv::COLOR_BGR2RGB);
     QImage image1 = QImage((uchar*) dest.data, dest.cols, dest.rows, dest.step, QImage::Format_RGB888);
 
     pixmap = QPixmap::fromImage(image1);
