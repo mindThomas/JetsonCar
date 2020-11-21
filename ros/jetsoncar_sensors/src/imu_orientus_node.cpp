@@ -15,8 +15,8 @@
 #include <linux/serial.h>
 #endif
 
-#include "orientus_sdk_c/an_packet_protocol.h"
-#include "orientus_sdk_c/spatial_packets.h"
+#include "imu_protocol_dynamic/an_packet_protocol.h"
+#include "imu_protocol_dynamic/spatial_packets.h"
 
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
@@ -317,11 +317,11 @@ private:
         }
 
     }
-  int an_packet_encode_and_send(an_packet_t* packet) {
-    an_packet_encode(packet);
-    // need cast to prevent autosizing of packet
-    return boost::asio::write(port_, boost::asio::buffer((const void*)an_packet_pointer(packet), an_packet_size(packet)));
-  }
+    int an_packet_encode_and_send(an_packet_t* packet) {
+        an_packet_encode(packet);
+        // need cast to prevent autosizing of packet
+        return boost::asio::write(port_, boost::asio::buffer((const void*)an_packet_pointer(packet), an_packet_size(packet)));
+    }
     // Process incoming data on serial link
     //
     // @brief Reads the serial buffer and dispatches the received payload to the

@@ -48,6 +48,7 @@ extern "C" {
 #include <stdbool.h>
 #include <math.h>
 
+/*
  #define min(a,b) \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
@@ -56,7 +57,7 @@ extern "C" {
  #define max(a,b) \
    ({ __typeof__ (a) _a = (a); \
        __typeof__ (b) _b = (b); \
-     _a > _b ? _a : _b; })
+     _a > _b ? _a : _b; })*/
 
 #define HMC58X3_ADDR 0x1E // 7 bit address of the HMC58X3 used with the Wire library
 #define HMC_POS_BIAS 1

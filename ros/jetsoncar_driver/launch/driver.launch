@@ -2,7 +2,7 @@
 <launch>
 
     <arg name="serial_port" default="/dev/jetsoncar" />
-    <arg name="open_reconfigure" default="true" />
+    <arg name="open_reconfigure" default="false" />
 
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find jetsoncar_driver)/config/rosconsole.conf"/>
 

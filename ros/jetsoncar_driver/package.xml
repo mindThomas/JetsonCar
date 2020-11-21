@@ -61,6 +61,7 @@
   <depend>tf2_ros</depend>
   <depend>dynamic_reconfigure</depend>
   <depend>jetsoncar_interfaces</depend>  
+  <depend>jetsoncar_libraries</depend>  
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

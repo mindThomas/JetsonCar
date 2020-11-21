@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include <HMC58X3.h>
+#include <algorithm>
 
 
 /*!
@@ -192,7 +193,7 @@ bool HMC58X3::calibrate(unsigned char gain,unsigned int n_samples)
                 /*
                     Detect saturation.
                 */
-                if (-(1<<12) >= min(xyz[0],min(xyz[1],xyz[2])))
+                if (-(1<<12) >= std::min(xyz[0],std::min(xyz[1],xyz[2])))
                 {
                     printf("HMC58x3 Self test saturated. Increase range.\n");
                     bret=false;
@@ -216,7 +217,7 @@ bool HMC58X3::calibrate(unsigned char gain,unsigned int n_samples)
                 /*
                     Detect saturation.
                 */
-                if (-(1<<12) >= min(xyz[0],min(xyz[1],xyz[2])))
+                if (-(1<<12) >= std::min(xyz[0],std::min(xyz[1],xyz[2])))
                 {
                     printf("HMC58x3 Self test saturated. Increase range.\n");
                     bret=false;

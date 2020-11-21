@@ -6,7 +6,7 @@
     <arg name="enable_heading_fusion" default="false" />
     <arg name="odom_in_topic" default="imu/odom_in" />
 
-    <node name="imu_node" pkg="jetsoncar_sensors" type="imu_node" output="screen" required="true">
+    <node name="imu_spatial_node" pkg="jetsoncar_sensors" type="imu_spatial_node" output="screen" required="true">
         <param name="raw_data_rate"       type="int"    value="100"/>
         <param name="estimate_data_rate"  type="int"    value="100"/>
 

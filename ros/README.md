@@ -214,3 +214,18 @@ With GUI
 rosrun rqt_bag rqt_bag --clock
 ```
 Note that the GUI does not seem to be able to handle the transform publication correctly.
+
+
+## Enable debug message
+Verbosity of the ROS console message is configured through the debug logger. By default `ROS_DEBUG` and `ROS_DEBUG_STREAM` is not printed to `stdout` (in the terminal).
+
+To enable this one can either include a `rosconsole.conf` in a launch file, similar to how it is done in `jetson_driver` or execute the following command after launching the node:
+```
+rosservice call /<node name>/set_logger_level "{logger: 'ros', level: 'debug'}" 
+```
+
+Alternatively debug verbosity can also be enabled programatically with:
+```
+if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug))
+    ros::console::notifyLoggerLevelsChanged();
+```

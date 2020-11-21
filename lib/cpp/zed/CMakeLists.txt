@@ -43,7 +43,7 @@ if (${ZED_FOUND})
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
 
     # Add the library - change SHARED/STATIC according to the requirement
-    add_library( ${library_name} STATIC ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
+    add_library( ${library_name} SHARED ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
     target_link_libraries( ${library_name} PUBLIC ${library_dependencies} )
     target_include_directories( ${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} ${ZED_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS} )
 

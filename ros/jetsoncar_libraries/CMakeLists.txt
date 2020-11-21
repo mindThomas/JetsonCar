@@ -13,6 +13,8 @@ set(CMAKE_CXX_EXTENSIONS NO) # use -std=c++14 instead of -std=gnu++14
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  pcl_conversions
+  pcl_ros
 )
 
 ## System dependencies are found with CMake's conventions
@@ -27,6 +29,8 @@ find_package(CURL REQUIRED)
 find_package(easy_profiler)
 
 find_package(realsense2 REQUIRED)
+
+find_package(gflags REQUIRED)
 
 set(OPENCV_SEARCH_PATH "~/repos/opencv-4.3.0/install/")
 list(APPEND CMAKE_MODULE_PATH "${OPENCV_SEARCH_PATH}")
@@ -44,6 +48,44 @@ find_package(Qt5
         Concurrent
         OpenGL
       REQUIRED)
+
+## PCL
+find_package(PCL REQUIRED COMPONENTS common search features filters keypoints registration QUIET)
+#find_package(PCL REQUIRED COMPONENTS common search features visualization QUIET)  # this line is needed to use PCL Visualizer
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+
+# cherry pick the only module in io to prevent conflicts
+# of its components, such as vtk with other nucore dependencies
+set(PCL_LIBRARIES ${PCL_LIBRARIES} ${PCL_LIBRARY_DIRS}/libpcl_io.so)
+
+# these lines are needed to use PCL Visualizer
+#list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
+#set(PCL_LIBRARIES ${PCL_LIBRARIES} vtkCommonCore-6.2.so )
+#include_directories(/usr/include/vtk)
+#include_directories(/usr/lib64/vtk)
+
+find_package(VTK REQUIRED)
+find_package(PCL 1.7.1 REQUIRED)
+
+# Fix a compilation bug under ubuntu 16.04 (Xenial)
+list(REMOVE_ITEM PCL_LIBRARIES "vtkproj4")
+
+mark_as_advanced(
+        FLANN_INCLUDE_DIRS
+        FLANN_LIBRARY
+        FLANN_LIBRARY_DEBUG
+        PCL_COMMON_INCLUDE_DIR
+        PCL_DIR
+        PCL_FEATURES_INCLUDE_DIR
+        PCL_FILTERS_INCLUDE_DIR
+        PCL_KDTREE_INCLUDE_DIR
+        PCL_OCTREE_INCLUDE_DIR
+        PCL_SAMPLE_CONSENSUS_INCLUDE_DIR
+        PCL_SEARCH_INCLUDE_DIR
+        PCL_KEYPOINTS_INCLUDE_DIR
+)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -108,9 +150,9 @@ endif()
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS ${library_directory} ${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS}
-  LIBRARIES ${JETSONCAR_LIBRARIES} easy_profiler
-#  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs tf
-  DEPENDS Boost OpenCV CURL
+  LIBRARIES ${JETSONCAR_LIBRARIES} # easy_profiler realsense2
+  CATKIN_DEPENDS roscpp
+  DEPENDS Boost OpenCV CURL EIGEN3 GFLAGS PCL
 )
 
 ## OBS! The order is important. 'catkin_package' has to come before all 'add_executable' and 'add_library'!

@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_ros
   dynamic_reconfigure  
   jetsoncar_interfaces
+  jetsoncar_libraries
 )
 
 ## System dependencies are found with CMake's conventions
@@ -58,7 +59,6 @@ generate_dynamic_reconfigure_options(
 
 # Add LSPC library
 add_subdirectory(libs/lspc)
-add_subdirectory(libs/utils)
 
 ###################################
 ## catkin specific configuration ##
@@ -72,7 +72,7 @@ add_subdirectory(libs/utils)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES lspc
-  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs ackermann_msgs tf dynamic_reconfigure jetsoncar_interfaces
+  CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs ackermann_msgs tf dynamic_reconfigure jetsoncar_interfaces jetsoncar_libraries
   DEPENDS Boost
 )
 
@@ -127,7 +127,7 @@ target_link_libraries(odometry_node ${catkin_LIBRARIES})
 
 add_executable (jetsoncar_driver_node src/jetsoncar_driver_node/main.cpp src/jetsoncar_driver_node/lspc_callbacks.cpp src/jetsoncar_driver_node/ros_callbacks.cpp src/odometry.cpp)
 add_dependencies(jetsoncar_driver_node ${PROJECT_NAME}_gencfg ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(jetsoncar_driver_node ${catkin_LIBRARIES} lspc utils)
+target_link_libraries(jetsoncar_driver_node ${catkin_LIBRARIES} lspc)
 
 #############
 ## Install ##

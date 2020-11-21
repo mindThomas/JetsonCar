@@ -24,6 +24,15 @@ find_package(catkin REQUIRED COMPONENTS
 find_package(Boost REQUIRED COMPONENTS thread)
 include_directories(${Boost_INCLUDE_DIRS})
 
+# for automatic multicore processing
+find_package(OpenMP REQUIRED)
+if (OPENMP_FOUND)
+    #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -march=native")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set(OpenMP_FLAGS ${OpenMP_CXX_FLAGS})
+    set(OPENMP_LIB_GNU "gomp")
+endif()
+
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
@@ -113,7 +122,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES jetsoncar_libraries
   CATKIN_DEPENDS roscpp std_msgs geometry_msgs sensor_msgs nav_msgs tf jetsoncar_libraries realsense2_camera  
-# DEPENDS Boost
+  #DEPENDS Boost
 )
 	
 ###########
@@ -157,9 +166,18 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_executable (imu_node src/imu_node.cpp)
-add_dependencies(imu_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(imu_node ${catkin_LIBRARIES})
+add_executable (imu_spatial_node src/imu_spatial_node.cpp)
+add_dependencies(imu_spatial_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(imu_spatial_node ${catkin_LIBRARIES})
+
+add_executable (imu_orientus_node src/imu_orientus_node.cpp)
+add_dependencies(imu_orientus_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(imu_orientus_node ${catkin_LIBRARIES})
+
+add_executable (imu_i2c_node src/imu_i2c_node.cpp)
+target_compile_options(imu_i2c_node PRIVATE ${OpenMP_FLAGS})
+add_dependencies(imu_i2c_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(imu_i2c_node ${catkin_LIBRARIES} ${OpenMP_LIBS})
 
 #############
 ## Install ##

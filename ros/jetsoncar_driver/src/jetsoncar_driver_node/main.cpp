@@ -54,7 +54,7 @@
 #include "jetsoncar_driver/jetsoncar_driver_node/lspc_callbacks.h"
 #include "jetsoncar_driver/odometry.h"
 
-#include <utils.hpp>
+#include <utils/utils.h>
 
 /* Include messages */
 #include <geometry_msgs/Twist.h>
@@ -64,6 +64,8 @@
 /* Include generated Dynamic Reconfigure parameters */
 #include <dynamic_reconfigure/server.h>
 #include <jetsoncar_driver/ParametersConfig.h>
+
+using namespace utils;
 
 void LSPC_ConnectionThread(boost::shared_ptr<ros::NodeHandle> n, std::string serial_port, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj, std::future<void> exitSignalObj)
 {
