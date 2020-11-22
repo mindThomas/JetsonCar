@@ -3,13 +3,12 @@
     <include file="$(find jetsoncar_sensors)/launch/t265.launch">
         <arg name="launch_rviz" value="false" />
         <arg name="camera" value="realsense_t265" />
+        <arg name="publish_tf" value="false" />
     </include>
 
-    <include file="$(find jetsoncar_sensors)/launch/imu.launch">
-        <arg name="publish_tf" default="false" />
-        <arg name="enable_heading_fusion" default="true" />
-        <arg name="enable_position_fusion" default="false" />
-        <arg name="odom_in_topic" value="/realsense_t265/odom/sample" />
+    <include file="$(find jetsoncar_sensors)/launch/d435.launch">
+        <arg name="launch_rviz" value="false" />
+        <arg name="camera" value="realsense_d435" />
     </include>
 
     <!-- urdf xml robot description loaded on the Parameter Server (for use in RViz) - this also converts the xacro into a proper urdf file -->
@@ -18,5 +17,5 @@
 
     <node pkg="tf" type="static_transform_publisher" name="world_odom" args="0 0 0 0 0 0 /world /realsense_t265_odom_frame 100"/>
 
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/t265_imu_fusion.rviz" required="false" />
+    <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/t265_imu_fusion.rviz" required="false" />-->
 </launch>

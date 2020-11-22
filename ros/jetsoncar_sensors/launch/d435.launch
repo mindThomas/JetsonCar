@@ -44,7 +44,6 @@
         -->
         
         <arg name="allow_no_texture_points"   value="false"/>
-
     </include>
   </group>
 

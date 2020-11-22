@@ -2,6 +2,7 @@
 <launch>
   <arg name="camera"              default="realsense_t265"/>
   <arg name="launch_rviz"         default="false" />
+  <arg name="publish_tf"          default="true" />
 
   <!--
     RS2_OPTION_ENABLE_MAPPING = Use an on device map (recommended)
@@ -10,18 +11,20 @@
     RS2_OPTION_ENABLE_DYNAMIC_CALIBRATION = Enable dynamic calibration (recommended)
     RS2_OPTION_ENABLE_MAP_PRESERVATION = Preserve the map from the previous run as if it was loaded
   -->
-  <rosparam>
-      /camera/tracking_module/enable_auto_exposure: true
-      /camera/tracking_module/enable_mapping: true
-      /camera/tracking_module/enable_relocalization: true
-      /camera/tracking_module/enable_pose_jumping: true
-      /camera/tracking_module/enable_dynamic_calibration: true
-      /camera/tracking_module/enable_map_preservation: false
-  </rosparam>
   <group ns="$(arg camera)">
+    <rosparam param="tracking_module/enable_auto_exposure" subst_value="true">true</rosparam>
+    <rosparam param="tracking_module/enable_mapping" subst_value="true">true</rosparam>
+    <rosparam param="tracking_module/enable_relocalization" subst_value="true">true</rosparam>    
+    <rosparam param="tracking_module/enable_pose_jumping" subst_value="true">true</rosparam>    
+    <rosparam param="tracking_module/enable_dynamic_calibration" subst_value="true">true</rosparam>    
+    <rosparam param="tracking_module/enable_map_preservation" subst_value="true">false</rosparam>    
+
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
     <arg name="device_type"         value="t265"/>
-    
+    <arg name="serial_no"           value=""/>
+    <arg name="usb_port_id"         value=""/>
+    <arg name="json_file_path"      value=""/>
+
     <arg name="tf_prefix"           value="$(arg camera)"/>
 
     <arg name="fisheye_width"       value="848"/> 
@@ -35,14 +38,15 @@
     <arg name="accel_fps"           value="62"/>
     <arg name="enable_gyro"         value="true"/>
     <arg name="enable_accel"        value="true"/>
+    <arg name="enable_pose"         value="true"/>
 
     <arg name="enable_sync"         value="false"/>
 
     <arg name="linear_accel_cov"    value="0.01"/>
-    <arg name="initial_reset"       value="false"/>
-    <arg name="unite_imu_method"    value="none"/> <!-- Options are: [none, copy, linear_interpolation] -->
+    <arg name="initial_reset"       value="true"/>
+    <arg name="unite_imu_method"    value=""/> <!-- Options are: [none, copy, linear_interpolation] -->
 
-    <arg name="publish_odom_tf"     value="true"/> <!-- whether or not to publish transform to TF tree -->
+    <arg name="publish_odom_tf"     value="$(arg publish_tf)"/> <!-- whether or not to publish transform to TF tree -->
 
     <!--
     Important Notice: For wheeled robots, odometer input is a requirement for robust
@@ -60,3 +64,4 @@
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/t265_path.rviz" required="false" />
   </group>
 </launch>
+
