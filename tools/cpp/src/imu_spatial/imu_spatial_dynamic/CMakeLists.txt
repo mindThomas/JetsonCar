@@ -1,12 +1,8 @@
 # Edit the configuration line below to match binary needs
-set(binary_dependencies    imu  realsense )
+set(binary_dependencies    imu_spatial_protocol_dynamic  rs232 )
 
 # Configure build as release (for maximum optimization) 
-#set(CMAKE_BUILD_TYPE "Release")
-set(CMAKE_BUILD_TYPE "RelWithDebInfo")
-#set(CMAKE_BUILD_TYPE "Debug")
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBUILD_WITH_EASY_PROFILER")
+set(CMAKE_BUILD_TYPE "Release")
 
 prepare_binary()
 

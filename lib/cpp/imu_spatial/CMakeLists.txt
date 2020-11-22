@@ -19,7 +19,7 @@ message(STATUS "   ${library_name}\t\t[${CMAKE_BUILD_TYPE}]")
 # Make a compiler flag for the current source folder path
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__SOURCE_FOLDER__='\"${CMAKE_CURRENT_SOURCE_DIR}\"'")
 
-set(library_dependencies ${Boost_LIBRARIES} ${Eigen_LIBRARIES} pthread easy_profiler imu_protocol_dynamic geo)
+set(library_dependencies ${Boost_LIBRARIES} ${Eigen_LIBRARIES} pthread easy_profiler imu_spatial_protocol_dynamic geo)
 
 FILE(GLOB_RECURSE binary_sources_c *.c) # find all c files
 FILE(GLOB_RECURSE binary_sources_cpp *.cpp) # find all cpp files

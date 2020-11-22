@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="imu_topic" default="imu/raw" />
+    <arg name="mag_topic" default="imu/mag" />
+
+    <node name="imu_i2c_node" pkg="jetsoncar_sensors" type="imu_i2c_node" output="screen" required="true">
+        <param name="poll_rate"      type="int"    value="100"/>
+
+        <param name="world_frame"    type="str"    value="world"/>
+        <param name="imu_frame"      type="str"    value="imu_link"/>
+
+        <remap from="imu/raw" to="$(arg imu_topic)" />
+        <remap from="imu/mag" to="$(arg mag_topic)" />
+    </node>
+
+</launch>

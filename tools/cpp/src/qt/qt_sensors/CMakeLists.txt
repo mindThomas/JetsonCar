@@ -8,7 +8,7 @@ set(binary_dependencies    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSu
     ${OpenCV_LIBRARIES}
     QGLVisualizer
     realsense    
-    imu    
+    imu_spatial    
     utils
     )
 

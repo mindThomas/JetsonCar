@@ -1,7 +1,7 @@
 if (${ZED_FOUND})
 
 # Edit the configuration line below to match binary needs
-set(binary_dependencies  gtsam imu realsense zed )
+set(binary_dependencies  gtsam imu_spatial realsense zed )
 
 # Configure build as release (for maximum optimization) 
 #set(CMAKE_BUILD_TYPE "Release")

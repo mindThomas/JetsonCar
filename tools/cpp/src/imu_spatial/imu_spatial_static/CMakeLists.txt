@@ -1,5 +1,5 @@
 # Edit the configuration line below to match binary needs
-set(binary_dependencies    imu_protocol_static )
+set(binary_dependencies    imu_spatial_protocol_static )
 
 # Configure build as release (for maximum optimization) 
 set(CMAKE_BUILD_TYPE "Release")

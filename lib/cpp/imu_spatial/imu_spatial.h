@@ -1,5 +1,5 @@
-#ifndef JETSONCAR_LIBRARIES_IMU_H
-#define JETSONCAR_LIBRARIES_IMU_H
+#ifndef JETSONCAR_LIBRARIES_IMU_SPATIAL_H
+#define JETSONCAR_LIBRARIES_IMU_SPATIAL_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,8 +23,8 @@
 #include <linux/serial.h>
 #endif
 
-#include "imu_protocol_dynamic/an_packet_protocol.h"
-#include "imu_protocol_dynamic/spatial_packets.h"
+#include "imu_spatial_protocol_dynamic/an_packet_protocol.h"
+#include "imu_spatial_protocol_dynamic/spatial_packets.h"
 
 #include <Eigen/Core>
 #include <Eigen/Geometry>

@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "imu/imu.h"
+#include "imu_spatial/imu_spatial.h"
 #include "realsense/realsense.h"
 
 #ifdef WITH_ZED_CAMERA

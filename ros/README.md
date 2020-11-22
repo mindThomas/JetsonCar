@@ -38,7 +38,7 @@ ln -s <path to JetsonCar repo>/lib/cpp ./lib
 
 # Cloning dependencies
 # 1. Realsense T265 ROS wrapper
-git clone https://github.com/mindThomas/realsense-ros
+git clone --single-branch --branch thomas/development https://github.com/mindThomas/realsense-ros
 
 # 2. ethz-asl libraries and nodes
 git clone https://github.com/ethz-asl/image_undistort.git

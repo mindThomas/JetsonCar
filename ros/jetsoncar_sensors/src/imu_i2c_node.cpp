@@ -219,8 +219,7 @@ int main(int argc, char **argv) {
     ros::NodeHandle nParam("~"); // default/current namespace node handle
 
     // Enable debug verbosity by default
-    if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug))
-        ros::console::notifyLoggerLevelsChanged();
+    //if (ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug)) ros::console::notifyLoggerLevelsChanged();
 
     int poll_rate = 100; // Hz
     if (!nParam.getParam("poll_rate", poll_rate)) {

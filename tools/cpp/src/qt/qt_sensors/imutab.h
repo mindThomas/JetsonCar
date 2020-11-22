@@ -16,7 +16,7 @@
 #include "imusubtab.h"
 #include "imu3dview.h"
 
-#include "imu/imu.h"
+#include "imu_spatial/imu_spatial.h"
 #include "realsense/realsense.h"
 
 #include "ui_imutab.h"

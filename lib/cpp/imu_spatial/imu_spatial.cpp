@@ -1,4 +1,4 @@
-#include "imu.h"
+#include "imu_spatial.h"
 
 #include <iostream>
 #include <iomanip>
@@ -375,8 +375,6 @@ void IMU::SerialCallback(const boost::system::error_code &error, std::size_t byt
     // READ THE NEXT PACKET
     port_.async_read_some(boost::asio::buffer(an_decoder_pointer(&an_decoder_), an_decoder_size(&an_decoder_)),
                           std::bind(&IMU::SerialCallback, this, std::placeholders::_1, std::placeholders::_2));
-
-    return;
 }
 
 /// From https://stackoverflow.com/questions/22581315/how-to-discard-data-as-it-is-sent-with-boostasio/22598329#22598329

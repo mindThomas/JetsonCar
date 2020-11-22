@@ -6,17 +6,15 @@
 #include <signal.h>
 
 #include <easy/profiler.h>
-
-#include "imu/imu.h"
-#include "realsense/realsense.h"
-
-void PoseCallback(Eigen::Affine3f pose, IMU * imu);
+#include "imu_spatial/imu_spatial.h"
 
 bool ShouldExit = false;
 void exitHandler(int s) {
     std::cout << "Should exit" << std::endl;
     ShouldExit = true;
 }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -26,13 +24,10 @@ int main(int argc, char *argv[])
 
     size_t count = 0;
     IMU imu;
-    Realsense realsense;
-
-    realsense.Connect();
-    realsense.RegisterCallback_Pose(std::bind(PoseCallback, std::placeholders::_1, &imu));
 
     imu.Connect();
-    imu.Configure(IMU::OutputType::Estimates, 100);
+    //imu.Configure(IMU::OutputType::Estimates, 100);
+    imu.Configure(IMU::OutputType::RawSensors, 100);
 
     while (!ShouldExit)
     {
@@ -51,33 +46,34 @@ int main(int argc, char *argv[])
         }*/
         //imu.GetStatus();
 
-        //auto angular_velocity = imu.GetGyroscope();
-        auto estimate = imu.GetEstimate();
+        auto angular_velocity = imu.GetGyroscope();
+        //auto estimate = imu.GetEstimate();
 
-        /*printf("Angular velocity (X,Y,Z) = [%2.3f] %2.3f, %2.3f, %2.3f rad/s\n",
+        printf("Angular velocity (X,Y,Z) = [%2.3f] %2.3f, %2.3f, %2.3f rad/s\n",
                angular_velocity.timestamp,
                angular_velocity.measurement[0],
                angular_velocity.measurement[1],
                angular_velocity.measurement[2]
-        );*/
+        );
 
-        printf("RPY = [%2.3f] %2.3f, %2.3f, %2.3f deg\n",
+        /*printf("RPY = [%2.3f] %2.3f, %2.3f, %2.3f deg\n",
                estimate.timestamp,
                rad2deg(estimate.RPY[0]),
                rad2deg(estimate.RPY[1]),
                rad2deg(estimate.RPY[2])
-        );
+        );*/
 
-        printf("XYZ = %2.3f, %2.3f, %2.3f m\n",
-               estimate.position_NED[0],
-               estimate.position_NED[1],
-               estimate.position_NED[2]
-        );
+        /*printf("XYZ = %2.3f, %2.3f, %2.3f m\n",
+               estimate.position[0],
+               estimate.position[1],
+               estimate.position[2]
+        );*/
 
 
         if ((count++ % 100) == 0) {
             //imu.SetHeading(deg2rad(0), deg2rad(2));
-            //imu.GetStatus();
+            imu.SetPositionNED(0, 0, 0, 1);
+            imu.GetStatus();
         }
 
         std::cout << std::flush;
@@ -85,19 +81,4 @@ int main(int argc, char *argv[])
     }
 
     imu.Disconnect();
-    realsense.Disconnect();
-}
-
-void PoseCallback(Eigen::Affine3f pose, IMU * imu)
-{
-    static size_t count = 0;
-
-    auto XYZ = Realsense::GetPoseTranslation(pose);
-    auto RPY = Realsense::GetPoseEulerRPY(pose, true);
-    //printf("XYZ = %2.2f, %2.2f, %2.2f\n", XYZ(0), XYZ(1), XYZ(2));
-    //printf("RPY = %2.2f, %2.2f, %2.2f\n\n", RPY(0), RPY(1), RPY(2));
-
-    if ((count++ % 100) == 0) {
-        imu->SetPositionNED(XYZ(0), XYZ(1), XYZ(2), 1);
-    }
 }
