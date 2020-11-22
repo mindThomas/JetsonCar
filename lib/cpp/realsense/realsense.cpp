@@ -67,6 +67,10 @@ void Realsense::Connect(bool Callback_nPollThread)
 
 rs2::config Realsense::Configure()
 {
+    // Set options before configuring the pipeline
+    auto sensor = get_sensor(get_device());
+    sensor.set_option(RS2_OPTION_ENABLE_MAPPING, 1);
+
     // Create a configuration for configuring the pipeline with a non default profile
     rs2::config cfg;
 
@@ -87,6 +91,9 @@ rs2::config Realsense::Configure()
 
 bool Realsense::DeviceAvailable()
 {
+    // See https://github.com/IntelRealSense/librealsense/blob/master/examples/sensor-control/api_how_to.h
+    // And see api_helper.hpp
+    //
     // First, create a rs2::context.
     // The context represents the current platform with respect to connected devices
     rs2::context ctx;

@@ -179,7 +179,7 @@ static rs2::sensor get_sensor(const rs2::device& dev, size_t device_index = 0)
         throw std::out_of_range("Selected sensor index is out of range");
     }
 
-    return  sensors[device_index];
+    return sensors[device_index];
 }
 
 static void list_sensor_options(const rs2::sensor& sensor)

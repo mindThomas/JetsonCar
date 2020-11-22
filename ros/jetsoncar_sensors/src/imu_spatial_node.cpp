@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include "imu/imu.h"
+#include "imu_spatial/imu_spatial.h"
 
 #include "std_msgs/String.h"
 

@@ -15,8 +15,8 @@
 #include <linux/serial.h>
 #endif
 
-#include "imu_protocol_dynamic/an_packet_protocol.h"
-#include "imu_protocol_dynamic/spatial_packets.h"
+#include "imu_spatial_protocol_dynamic/an_packet_protocol.h"
+#include "imu_spatial_protocol_dynamic/spatial_packets.h"
 
 #include "ros/ros.h"
 #include "sensor_msgs/Imu.h"
