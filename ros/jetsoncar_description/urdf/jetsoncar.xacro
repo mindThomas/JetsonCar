@@ -254,7 +254,10 @@
         </link>
         <xacro:fixed_offset_joint_rpy parent="realsense_d435_mount_center" child="realsense_t265_mount_center" offset="0 0 0.030" rpy="0 0 0" />   
 
-        <link name="realsense_t265_link">
+
+        <xacro:fixed_offset_joint_rpy parent="realsense_t265_mount_center" child="realsense_t265_link_" offset="0.00595 0.0091 0" rpy="0 0 0" />     
+        <!-- realsense_t265_pose_frame to realsense_t265_link is published by Realsense node -->
+        <link name="realsense_t265_link_">
             <visual>
                     <material name="lightgrey"/>
                     <geometry>
@@ -262,8 +265,7 @@
                     </geometry>         
                     <origin rpy="${pi/2} 0 ${pi/2}" xyz="0.00655 0 0"/>                
             </visual>
-        </link>
-        <xacro:fixed_offset_joint_rpy parent="realsense_t265_mount_center" child="realsense_t265_link" offset="0.00595 0.0091 0" rpy="0 0 0" />         
+        </link>    
 
        
 

@@ -10,8 +10,8 @@
 
         <arg name="tf_prefix"         value="$(arg camera)"/>
 
-        <arg name="enable_pointcloud" value="true"/>
-        <arg name="enable_sync"       value="true"/>
+        <arg name="enable_pointcloud" value="false"/>
+        <arg name="enable_sync"       value="false"/>
         <arg name="align_depth"       value="true"/>
 
         <arg name="depth_width"       value="640"/>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find jetsoncar_sensors)/launch/d435_t265.launch"/>
+
+    <!-- urdf xml robot description loaded on the Parameter Server (for use in RViz) - this also converts the xacro into a proper urdf file -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find jetsoncar_description)/urdf/jetsoncar.xacro' disable_joints:=true" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+    <node pkg="tf" type="static_transform_publisher" name="world_odom" args="0 0 0 0 0 0 /world /realsense_t265_odom_frame 100"/>
+
+    <!-- Link the odom-based Realsense T265 pose together with the Realsense T265 camera link on the robot -->
+    <node name="tf_footprint_odom_glue" pkg="jetsoncar_sensors" type="tf_footprint_odom_glue.py" args="realsense_t265_link_ realsense_t265_pose_frame" required="false" />
+
+    <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/sensors_display.rviz" required="false" />-->
+</launch>

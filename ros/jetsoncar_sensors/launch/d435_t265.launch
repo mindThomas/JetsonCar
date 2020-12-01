@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <include file="$(find jetsoncar_sensors)/launch/t265.launch">
+    <!--<include file="$(find jetsoncar_sensors)/launch/t265.launch">
         <arg name="launch_rviz" value="false" />
         <arg name="camera" value="realsense_t265" />
         <arg name="publish_tf" value="false" />
@@ -9,13 +9,38 @@
     <include file="$(find jetsoncar_sensors)/launch/d435.launch">
         <arg name="launch_rviz" value="false" />
         <arg name="camera" value="realsense_d435" />
-    </include>
+    </include>-->
 
-    <!-- urdf xml robot description loaded on the Parameter Server (for use in RViz) - this also converts the xacro into a proper urdf file -->
-    <param name="robot_description" command="$(find xacro)/xacro '$(find jetsoncar_description)/urdf/jetsoncar.xacro'" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+    <!-- Launching it with the individual launch files above causes unknown and unresolved USB problems with the T265 camera -->
+    <!-- Note that by launching both the frame rate of the D435 camera is only 15 FPS although it is supposed to be 30! -->
+    <group ns="realsense_t265">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="device_type"           value="t265"/>
+            <arg name="serial_no"             value=""/>
+            <arg name="tf_prefix"             value="realsense_t265"/>
+            <arg name="initial_reset"         value="false"/>
+            <arg name="enable_fisheye1"       value="true"/>
+            <arg name="enable_fisheye2"       value="true"/>
+            <arg name="topic_odom_in"         value="odom_in"/>
+            <arg name="calib_odom_file"       value=""/>
+            <arg name="enable_pose"           value="true"/>
+            <arg name="publish_odom_tf"       value="true"/>            
+        </include>
+    </group>
 
-    <node pkg="tf" type="static_transform_publisher" name="world_odom" args="0 0 0 0 0 0 /world /realsense_t265_odom_frame 100"/>
-
-    <!--<node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/t265_imu_fusion.rviz" required="false" />-->
+    <group ns="realsense_d435">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="device_type"           value="d4.5"/>
+            <arg name="serial_no"             value=""/>
+            <arg name="tf_prefix"             value="realsense_d435"/>
+            <arg name="initial_reset"         value="false"/>
+            <arg name="align_depth"           value="true"/>
+            <arg name="filters"               value="pointcloud"/>
+            <arg name="color_width"           value="640"/>
+            <arg name="color_height"          value="480"/>
+            <arg name="depth_width"           value="640"/>
+            <arg name="depth_height"          value="480"/>
+            <arg name="clip_distance"         value="-2"/>
+        </include>
+    </group>
 </launch>

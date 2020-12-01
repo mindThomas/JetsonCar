@@ -13,12 +13,12 @@ Realsense::~Realsense()
     }
 }
 
-void Realsense::Connect(bool Callback_nPollThread)
+bool Realsense::Connect(bool Callback_nPollThread)
 {
-    if (connected_) return;
+    if (connected_) return true;
 
-    if (!DeviceAvailable()) return;
-    if (!VerifyIMUsupport()) return;
+    if (!DeviceAvailable()) return false;
+    if (!VerifyIMUsupport()) return false;
 
     const auto cfg = Configure();
 
@@ -43,10 +43,10 @@ void Realsense::Connect(bool Callback_nPollThread)
                 counters[frame.get_profile().unique_id()]++;
             }
         });*/
-        if (!pipeline_profile) return;
+        if (!pipeline_profile) return false;
     } else {
         auto pipeline_profile = pipeline.start(cfg);
-        if (!pipeline_profile) return;
+        if (!pipeline_profile) return false;
     }
 
     // Get camera calibrations
@@ -63,6 +63,7 @@ void Realsense::Connect(bool Callback_nPollThread)
     }
 
     connected_ = true;
+    return true;
 }
 
 rs2::config Realsense::Configure()

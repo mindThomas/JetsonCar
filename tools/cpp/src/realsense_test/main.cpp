@@ -22,7 +22,10 @@ int main(int argc, char *argv[])
 
     Realsense realsense;
 
-    realsense.Connect();
+    if (!realsense.Connect(true)) {
+        std::cout << "Error: Could not find or connect to Realsense T265 device" << std::endl;
+        return 1;
+    }
 
     realsense.RegisterCallback_Pose(PoseCallback);
 

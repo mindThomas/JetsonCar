@@ -29,8 +29,8 @@
 
     <arg name="fisheye_width"       value="848"/> 
     <arg name="fisheye_height"      value="800"/>
-    <arg name="enable_fisheye1"     value="true"/>
-    <arg name="enable_fisheye2"     value="true"/>
+    <arg name="enable_fisheye1"     value="false"/>
+    <arg name="enable_fisheye2"     value="false"/>
 
     <arg name="fisheye_fps"         value="30"/>
 
@@ -43,8 +43,8 @@
     <arg name="enable_sync"         value="false"/>
 
     <arg name="linear_accel_cov"    value="0.01"/>
-    <arg name="initial_reset"       value="true"/>
-    <arg name="unite_imu_method"    value=""/> <!-- Options are: [none, copy, linear_interpolation] -->
+    <arg name="initial_reset"       value="false"/>
+    <arg name="unite_imu_method"    value="none"/> <!-- Options are: [none, copy, linear_interpolation] -->
 
     <arg name="publish_odom_tf"     value="$(arg publish_tf)"/> <!-- whether or not to publish transform to TF tree -->
 

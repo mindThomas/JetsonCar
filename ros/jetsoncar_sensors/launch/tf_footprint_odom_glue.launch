@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="robot_frame"          default="realsense_t265_link_" />
+    <arg name="sensor_frame"         default="realsense_t265_pose_frame" />
+
+    <!--<node name="tf_footprint_odom_glue" pkg="jetsoncar_sensors" type="tf_footprint_odom_glue.py" args="$(arg robot_frame) $(arg sensor_frame)" required="false" />-->
+    <node name="tf_footprint_odom_glue" pkg="jetsoncar_sensors" type="tf_footprint_odom_glue.py" required="false">
+        <param name="robot"          type="str"   value="$(arg robot_frame)" />
+        <param name="sensor"         type="str"   value="$(arg sensor_frame)" />
+    </node>
+</launch>

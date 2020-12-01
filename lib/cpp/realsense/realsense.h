@@ -41,7 +41,7 @@ public:
     Realsense();
     ~Realsense();
 
-    void Connect(bool Callback_nPollThread = true);
+    bool Connect(bool Callback_nPollThread = true);
     void Disconnect();
 
     bool DeviceAvailable();
