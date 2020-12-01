@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="serial_port" default="/dev/hokuyo" />
+    <arg name="frame" default="laser" />
+
+    <node name="urg_node" pkg="urg_node" type="urg_node" output="screen"  required="true">
+        <param name="ip_address" value="" />
+        <param name="serial_port" value="$(arg serial_port)" />
+        <param name="serial_baud" value="115200" />
+        <param name="frame_id" value="$(arg frame)" />
+        <param name="calibrate_time" value="true" />
+        <param name="publish_intensity" value="true" />
+        <param name="publish_multiecho" value="false" />
+        <!-- +/-240 deg -->
+        <param name="angle_min" value="-2.094395102393195" />
+        <param name="angle_max" value="2.094395102393195" />
+    </node>
+</launch>
