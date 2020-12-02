@@ -34,8 +34,8 @@
         <link name="imu_link">
             <visual>
                 <material name="grey"/>
-                <origin xyz="0.0136 -0.015 0.012" rpy="-${pi/2} 0 -${pi/2}" />
-                <!--<xacro:imu_geometry/>-->
+                <!--<origin xyz="0.0136 -0.015 0.012" rpy="-${pi/2} 0 -${pi/2}" />
+                <xacro:imu_geometry/>-->
                 <geometry>
                     <mesh filename="package://jetsoncar_description/models/spatial.dae" scale="1.0 1.0 1.0"/>
                 </geometry>
@@ -192,12 +192,19 @@
 		</link>
 		<xacro:fixed_offset_joint parent="base_link" child="lidar_mount" offset="0 0 ${baseplate_thickness}"/>-->
 		<link name="lidar">
-			<visual>
+			<!--<visual>
 				<material name="red"/>
 				<xacro:lidar_geometry/>
-			</visual>
+			</visual>-->
+            <visual>
+                <material name="lightgrey"/>
+                <geometry>
+                    <mesh filename="package://jetsoncar_description/models/hokuyo.stl" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <origin rpy="${pi/2} 0 0" xyz="-${lidar_width/2} ${lidar_length/2} -${lidar_scanline_height}"/>
+            </visual>                      
 		</link>
-		<xacro:fixed_offset_joint_rpy parent="base_link" child="lidar" offset="0 0 ${baseplate_thickness+lidar_height/2}" rpy="0 0 ${pi}"/>
+		<xacro:fixed_offset_joint_rpy parent="base_link" child="lidar" offset="0 0 ${baseplate_thickness+lidar_scanline_height}" rpy="0 0 ${pi}"/>
 	</xacro:if>
 
 	<xacro:if value="${enable_range_sensors}">

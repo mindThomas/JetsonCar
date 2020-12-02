@@ -31,8 +31,7 @@
     <arg name="fisheye_height"      value="800"/>
     <arg name="enable_fisheye1"     value="false"/>
     <arg name="enable_fisheye2"     value="false"/>
-
-    <arg name="fisheye_fps"         value="30"/>
+    <!-- If logging into a rosbag fisheye streams can not be enabled since this will overflow the write buffer -->
 
     <arg name="gyro_fps"            value="200"/>
     <arg name="accel_fps"           value="62"/>
@@ -58,7 +57,25 @@
     <arg name="topic_odom_in"       value="$(arg camera)/odom_in"/>
     <arg name="calib_odom_file"     value=""/>
     </include>
-  </group>
+
+    <!-- Disable the publishing of compressed image streams -->
+    <!-- https://github.com/ros-drivers/usb_cam/issues/55 -->
+    <group ns="fisheye1/image_raw" >
+        <rosparam param="disable_pub_plugins">
+            - 'image_transport/compressed'
+            - 'image_transport/compressedDepth'
+            - 'image_transport/theora'
+        </rosparam>
+    </group>  
+    
+    <group ns="fisheye2/image_raw" >
+        <rosparam param="disable_pub_plugins">
+            - 'image_transport/compressed'
+            - 'image_transport/compressedDepth'
+            - 'image_transport/theora'
+        </rosparam>
+    </group>     
+  </group>   
 
   <group if="$(arg launch_rviz)">
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find jetsoncar_description)/rviz/t265_path.rviz" required="false" />

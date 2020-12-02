@@ -6,6 +6,7 @@
   <group ns="$(arg camera)">
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
         <arg name="device_type"       value="d435"/>
+        <arg name="serial_no"         value=""/>
         <arg name="initial_reset"     value="false"/>
 
         <arg name="tf_prefix"         value="$(arg camera)"/>
@@ -16,17 +17,17 @@
 
         <arg name="depth_width"       value="640"/>
         <arg name="depth_height"      value="480"/>
-        <arg name="depth_fps"         value="30"/>
+        <arg name="depth_fps"         value="15"/>
         <arg name="enable_depth"      value="true"/>
 
         <arg name="color_width"       value="640"/>
         <arg name="color_height"      value="480"/>
-        <arg name="color_fps"         value="30"/>
+        <arg name="color_fps"         value="15"/>
         <arg name="enable_color"      value="true"/>
 
         <arg name="infra_width"       value="640"/>
         <arg name="infra_height"      value="480"/>
-        <arg name="infra_fps"         value="30"/>
+        <arg name="infra_fps"         value="15"/>
         <arg name="enable_infra1"     value="false"/>
         <arg name="enable_infra2"     value="false"/>
                     
@@ -37,14 +38,41 @@
         <arg name="enable_accel"      value="false"/>
         -->
 
-        <!-- Do not enable filters
-        <arg name="filters"           value="pointcloud"/>
-        <arg name="clip_distance"     value="-2"/>
+        <!-- Enable this to enable the channel: 
+                /realsense_d435/depth/color/points
+              Of type: sensor_msgs/PointCloud2 -->        
+        <!--<arg name="filters"           value="pointcloud"/>        
         <arg name="linear_accel_cov"  value="0.01"/>
         -->
-        
-        <arg name="allow_no_texture_points"   value="false"/>
+        <arg name="clip_distance"            value="-2"/>
+        <arg name="allow_no_texture_points"  value="false"/>
     </include>
+
+    <!-- Disable the publishing of compressed image streams -->
+    <!-- https://github.com/ros-drivers/usb_cam/issues/55 -->
+    <group ns="aligned_depth_to_color/image_raw" >
+        <rosparam param="disable_pub_plugins">
+            - 'image_transport/compressed'
+            - 'image_transport/compressedDepth'
+            - 'image_transport/theora'
+        </rosparam>
+    </group>
+
+    <group ns="color/image_raw" >
+        <rosparam param="disable_pub_plugins">
+            - 'image_transport/compressed'
+            - 'image_transport/compressedDepth'
+            - 'image_transport/theora'
+        </rosparam>
+    </group>
+
+    <group ns="depth/image_rect_raw" >
+        <rosparam param="disable_pub_plugins">
+            - 'image_transport/compressed'
+            - 'image_transport/compressedDepth'
+            - 'image_transport/theora'
+        </rosparam>
+    </group>     
   </group>
 
   <group if="$(arg launch_rviz)">

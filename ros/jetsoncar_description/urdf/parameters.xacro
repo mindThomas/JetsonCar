@@ -66,6 +66,7 @@
 	<xacro:property name="lidar_length" value="0.05" />
 	<xacro:property name="lidar_height" value="0.05" />
 	<xacro:property name="lidar_weight" value="0.200" />
+    <xacro:property name="lidar_scanline_height" value="0.057" />
 	<xacro:property name="lidar_mount_diameter" value="0.08" />
 	<xacro:property name="lidar_mount_height" value="0.13" />
 

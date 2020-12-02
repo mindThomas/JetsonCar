@@ -11,36 +11,20 @@
         <arg name="camera" value="realsense_d435" />
     </include>-->
 
-    <!-- Launching it with the individual launch files above causes unknown and unresolved USB problems with the T265 camera -->
+    <!-- Launching it with the individual launch files above causes unknown and unresolved USB problems with the T265 camera
+    See https://github.com/IntelRealSense/realsense-ros/issues/774 -->
     <!-- Note that by launching both the frame rate of the D435 camera is only 15 FPS although it is supposed to be 30! -->
-    <group ns="realsense_t265">
-        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
-            <arg name="device_type"           value="t265"/>
-            <arg name="serial_no"             value=""/>
-            <arg name="tf_prefix"             value="realsense_t265"/>
-            <arg name="initial_reset"         value="false"/>
-            <arg name="enable_fisheye1"       value="true"/>
-            <arg name="enable_fisheye2"       value="true"/>
-            <arg name="topic_odom_in"         value="odom_in"/>
-            <arg name="calib_odom_file"       value=""/>
-            <arg name="enable_pose"           value="true"/>
-            <arg name="publish_odom_tf"       value="true"/>            
-        </include>
-    </group>
 
-    <group ns="realsense_d435">
-        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
-            <arg name="device_type"           value="d4.5"/>
-            <arg name="serial_no"             value=""/>
-            <arg name="tf_prefix"             value="realsense_d435"/>
-            <arg name="initial_reset"         value="false"/>
-            <arg name="align_depth"           value="true"/>
-            <arg name="filters"               value="pointcloud"/>
-            <arg name="color_width"           value="640"/>
-            <arg name="color_height"          value="480"/>
-            <arg name="depth_width"           value="640"/>
-            <arg name="depth_height"          value="480"/>
-            <arg name="clip_distance"         value="-2"/>
-        </include>
-    </group>
+    <include file="$(find jetsoncar_sensors)/launch/t265.launch">
+        <arg name="launch_rviz" value="false" />
+        <arg name="camera" value="realsense_t265" />
+        <arg name="publish_tf" value="true" />
+    </include>
+
+    <include file="$(find timed_roslaunch)/timed_roslaunch.launch">
+        <arg name="time" value="2" />
+        <arg name="pkg" value="jetsoncar_sensors" />
+        <arg name="file" value="d435.launch" />
+        <arg name="value" value="launch_rviz:=false camera:=realsense_d435" />
+    </include>         
 </launch>
