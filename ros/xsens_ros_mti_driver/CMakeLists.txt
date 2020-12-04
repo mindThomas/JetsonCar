@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   geometry_msgs
   sensor_msgs
+  jetsoncar_libraries # to get the libraries: xscontroller, xscommon and xstypes
 )
 
 
@@ -36,6 +37,7 @@ catkin_package(
   sensor_msgs
   std_msgs
   geometry_msgs
+  jetsoncar_libraries # to get the libraries: xscontroller, xscommon and xstypes
 #  DEPENDS system_lib
 )
 
@@ -58,11 +60,12 @@ add_executable(
 	src/xdainterface.cpp
 	src/xdacallback.cpp
 )
+add_dependencies(xsens_mti_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(
 	xsens_mti_node
-	xscontroller
-	xscommon
-	xstypes
+	#xscontroller
+	#xscommon
+	#xstypes
 	pthread
 	dl
 	${catkin_LIBRARIES}

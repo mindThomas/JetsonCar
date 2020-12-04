@@ -35,8 +35,8 @@ set_property(SOURCE ${GLOBAL_HEADERS} PROPERTY SKIP_AUTOGEN ON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
 
 # Add the library - change SHARED/STATIC according to the requirement
-add_library( ${library_name} STATIC ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
+add_library( ${library_name} SHARED ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
 target_link_libraries( ${library_name} ${library_dependencies} )
 target_include_directories( ${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} )
 
-set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra" )
+#set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra" )

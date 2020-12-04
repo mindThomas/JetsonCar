@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="frame" default="xsens_link"/>
+
+    <group ns="xsens">
+        <node  name="xsens_mti_node" pkg="xsens_mti_driver" type="xsens_mti_node" output="screen" respawn="true">
+            <!--
+              Device settings, provide one of the following:
+               - device_id (most secure if you use multiple devices)
+               - port + baudrate information
+               - nothing: the driver scans for devices and selects the first   found.
+            -->
+            <!--
+            <param name="device_id" type="string" value="077007EF" />
+            <param name="port" type="string" value="/dev/ttyUSB0" />
+            <param name="baudrate" type="int" value="921600" />
+            -->
+
+            <!--
+              Log file (optional), placed in ~/.ros/ otherwise use absolute path
+            -->
+            <!--
+            <param name="log_file" type="string" value="log.mtb" />
+            -->
+
+            <param name="frame_id"              type="string" value="$(arg frame)" />
+
+            <param name="publisher_queue_size"  type="int"  value="5" />
+
+            <param name="pub_imu"               type="bool" value="true" />
+            <param name="pub_quaternion"        type="bool" value="true" />
+            <param name="pub_mag"               type="bool" value="true" />
+            <param name="pub_angular_velocity"  type="bool" value="true" />
+            <param name="pub_acceleration"      type="bool" value="true" />
+            <param name="pub_free_acceleration" type="bool" value="true" />
+
+            <param name="pub_dq"                type="bool" value="true" />
+            <param name="pub_dv"                type="bool" value="true" />
+            <param name="pub_sampletime"        type="bool" value="true" />
+            <param name="pub_temperature"       type="bool" value="true" />
+            <param name="pub_pressure"          type="bool" value="false" />
+            <param name="pub_gnss"              type="bool" value="false" />
+
+            <param name="pub_twist"             type="bool" value="true" />
+            <param name="pub_transform"         type="bool" value="true" />
+            <param name="pub_positionLLA"       type="bool" value="false" />
+            <param name="pub_velocity"          type="bool" value="false" />
+
+            <!--
+            ## Sensor standard deviation [x,y,z] (optional)
+            ## This value is used to override the covariance matrix in sensor_msgs/Imu and
+            ## sensor_msgs/MagneticField messages.
+            # linear_acceleration_stddev: [0, 0, 0] # [m/s^2]
+            # angular_velocity_stddev: [0, 0, 0] # [rad/s]
+            # orientation_stddev: [0, 0, 0] # [rad]
+            # magnetic_field_stddev: [0, 0, 0] # [Tesla]
+            -->
+        </node>
+    </group>
+
+</launch>

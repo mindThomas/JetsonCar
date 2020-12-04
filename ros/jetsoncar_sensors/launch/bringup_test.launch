@@ -3,6 +3,7 @@
     <include file="$(find jetsoncar_sensors)/launch/d435_t265.launch"/>
     <include file="$(find jetsoncar_sensors)/launch/imu_i2c.launch"/>
     <include file="$(find jetsoncar_sensors)/launch/hokuyo_lidar.launch"/>
+    <include file="$(find jetsoncar_sensors)/launch/xsens.launch"/>
 
     <!-- urdf xml robot description loaded on the Parameter Server (for use in RViz) - this also converts the xacro into a proper urdf file -->
     <param name="robot_description" command="$(find xacro)/xacro '$(find jetsoncar_description)/urdf/jetsoncar.xacro' disable_joints:=true" />

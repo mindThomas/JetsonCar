@@ -22,7 +22,7 @@ message(STATUS "   ${library_name}\t\t[${CMAKE_BUILD_TYPE}]")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_JOURNALLER")
 
-set(library_dependencies )
+set(library_dependencies xscommon)
 
 FILE(GLOB_RECURSE binary_sources_c *.c) # find all c files
 FILE(GLOB_RECURSE binary_sources_cpp *.cpp) # find all cpp files
@@ -36,8 +36,8 @@ set_property(SOURCE ${GLOBAL_HEADERS} PROPERTY SKIP_AUTOGEN ON)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../)
 
 # Add the library - change SHARED/STATIC according to the requirement
-add_library( ${library_name} STATIC ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
+add_library( ${library_name} SHARED ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
 target_link_libraries( ${library_name} ${library_dependencies} )
 target_include_directories( ${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${EIGEN3_INCLUDE_DIR} )
 
-set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra" )
+#set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra" )
