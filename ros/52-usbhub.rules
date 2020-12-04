@@ -1,0 +1,3 @@
+# See https://github.com/mvp/uhubctl
+
+SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", MODE="0666"

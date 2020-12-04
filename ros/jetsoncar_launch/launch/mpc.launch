@@ -2,7 +2,7 @@
 <launch>
 
 	<!-- Launch the MPC local planner, including the global_planner for high-level route planning -->
-	<include file="$(find kugle_navigation)/launch/mpc.launch">		
+	<include file="$(find jetsoncar_navigation)/launch/mpc.launch">		
 	</include>
 
 </launch>

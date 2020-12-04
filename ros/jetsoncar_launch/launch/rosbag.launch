@@ -6,7 +6,7 @@
 	<param name="/use_sim_time" value="true"/>
 
 	<!-- Launch the rviz visualization of the rosbag content -->
-	<include file="$(find kugle_launch)/launch/rviz_rosbag.launch">		
+	<include file="$(find jetsoncar_launch)/launch/rviz_rosbag.launch">		
 	</include>
 
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />

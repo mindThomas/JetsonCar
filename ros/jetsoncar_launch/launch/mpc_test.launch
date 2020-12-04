@@ -2,7 +2,7 @@
 <launch>
 
 	<!-- Launch the MPC test node -->
-	<include file="$(find kugle_mpc)/launch/mpc_test.launch">
+	<include file="$(find jetsoncar_mpc)/launch/mpc_test.launch">
 		<arg name="rate" value="10.0" />
 		<arg name="map_frame" value="map" />
 		<arg name="base_link_frame" value="base_link" />

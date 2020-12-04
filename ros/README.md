@@ -46,6 +46,9 @@ git clone https://github.com/ethz-asl/image_undistort.git
 # 3. ROSbag conversion tool
 git clone https://github.com/AtsushiSakai/rosbag_to_csv.git
 
+# 4. Decawave DWM1001 (MDEK1001) node
+git clone https://github.com/mindThomas/dwm1001_ros
+
 # Install automatic dependencies
 cd .. # go back to ros_ws folder
 rosdep install --from-paths src --ignore-src -r -y
@@ -165,24 +168,18 @@ The two stereo fiheye image streams can also be undistorted and used for other p
 Alternatively the code in our realsense driver (see the C++ common libraries) also includs the code for stereo rectification.
 See also: http://official-rtab-map-forum.67519.x6.nabble.com/Slam-using-Intel-RealSense-tracking-camera-T265-td6333.html#a6343
 
-## ROS bag to CSV
-Either it can be done directly using the rosbag functionality of the rostopic echo tool:
-```
-rostopic echo -b <log.bag> -p /tf > tf.csv
-```
-This will result in a CSV file with the first row defining the column names.
-Alternatively the `rosbag_to_csv` tool that we have cloned can be used.
-```
-rosrun rosbag_to_csv rosbag_to_csv.py
+## XSens IMU
+The following ROS library/node is used: http://wiki.ros.org/xsens_mti_driver
+Remember to enable low latency serial mode (https://base.xsens.com/hc/en-us/community/posts/360029341694-How-do-I-get-IMU-data-via-USB-in-real-time-?page=1#community_comment_360004975314):
+```bash
+sudo apt-get install setserial
+setserial /dev/ttyXsens low_latency
 ```
 
-ROSbags can also be investigated using
+## Recording a log
+To record a log execute the following command preferably on the onboard computer running the drivers to limit latency:
 ```
-rosrun rqt_bag rqt_bag <log.bag>
-```
-Finally the topics and their message types contained within a ROSbag can be opened and investigated with the Realsense ROSbag inspector coming from: https://github.com/IntelRealSense/librealsense/tree/master/tools/rosbag-inspector
-```
-rs-rosbag-inspector
+rosbag record -a -o /path/to/file.bag
 ```
 
 ## Record topics
@@ -215,6 +212,30 @@ rosrun rqt_bag rqt_bag --clock
 ```
 Note that the GUI does not seem to be able to handle the transform publication correctly.
 
+Alternatively the following launch file can be used:
+```
+ roslaunch jetsoncar_launch rosbag.launch bag:="${PWD}/kugle-v2_frb7_log.bag"
+```
+
+## ROS bag to CSV
+Either it can be done directly using the rosbag functionality of the rostopic echo tool:
+```
+rostopic echo -b <log.bag> -p /tf > tf.csv
+```
+This will result in a CSV file with the first row defining the column names.
+Alternatively the `rosbag_to_csv` tool that we have cloned can be used.
+```
+rosrun rosbag_to_csv rosbag_to_csv.py
+```
+
+ROSbags can also be investigated using
+```
+rosrun rqt_bag rqt_bag <log.bag>
+```
+Finally the topics and their message types contained within a ROSbag can be opened and investigated with the Realsense ROSbag inspector coming from: https://github.com/IntelRealSense/librealsense/tree/master/tools/rosbag-inspector
+```
+rs-rosbag-inspector
+```
 
 ## Enable debug message
 Verbosity of the ROS console message is configured through the debug logger. By default `ROS_DEBUG` and `ROS_DEBUG_STREAM` is not printed to `stdout` (in the terminal).

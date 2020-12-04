@@ -70,7 +70,12 @@ rs2::config Realsense::Configure()
 {
     // Set options before configuring the pipeline
     auto sensor = get_sensor(get_device());
-    sensor.set_option(RS2_OPTION_ENABLE_MAPPING, 1);
+    sensor.set_option(RS2_OPTION_ENABLE_AUTO_EXPOSURE, 1);       // Enable auto exposure
+    sensor.set_option(RS2_OPTION_ENABLE_MAPPING, 1);             // Use an on device map (recommended)
+    sensor.set_option(RS2_OPTION_ENABLE_RELOCALIZATION, 1);      // Use appearance based relocalization (depends on mapping)
+    sensor.set_option(RS2_OPTION_ENABLE_POSE_JUMPING, 1);        // Allow pose jumping (depends on mapping)
+    sensor.set_option(RS2_OPTION_ENABLE_DYNAMIC_CALIBRATION, 1); // Enable dynamic calibration (recommended)
+    sensor.set_option(RS2_OPTION_ENABLE_MAP_PRESERVATION, 0);    // Preserve the map from the previous run as if it was loaded
 
     // Create a configuration for configuring the pipeline with a non default profile
     rs2::config cfg;
