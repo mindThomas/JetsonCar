@@ -1,0 +1,110 @@
+=[ MTSDK For Linux ]============================================================
+
+-[ Public Source Code Example ]-------------------------------------------------
+
+Documentation:
+	https://base.xsens.com/hc/en-us/articles/207003759-Online-links-to-manuals-from-the-MT-Software-Suite
+
+Prerequisites:
+    - A compiler (gcc, clang)
+    - make
+
+Building:
+    To build the example enter the /examples/mtsdk directory and run:
+
+        make src_cpp
+
+    This will result in a single executable named "example" in
+    /examples/mtsdk/src_cpp
+
+    To use libusb, run make with the HAVE_LIBUSB=1
+
+-[ Shared Object Examples ]-----------------------------------------------------
+
+Building:
+    To build the examples run from within the /examples/mtsdk directory:
+
+        make xda_c_cpp
+
+    This will create the example binaries in /examples/mtsdk/xda_c_cpp
+
+-[ Awinda Monitor Example ]-----------------------------------------------------
+
+Building:
+    To build the awindamonitor Qt is required. Qt 5.9.0 has been tested, but
+    other versions may work fine as well.
+
+    For building with Qt5, libGL is also required. This can be installed on Ubuntu
+    using the package libglu1-mesa-dev
+
+    To build go to /examples/mtsdk and run:
+
+        make awindamonitor_cpp
+
+-[ Troubleshooting ]------------------------------------------------------------
+
+    - The Mti1 (Motion Tracker Development Board) is not recognized.
+
+    Support for the Development Board is present in recent kernels. (Since June 12, 2015).
+    If your kernel does not support the Board, you can add this manually
+
+    $ sudo /sbin/modprobe ftdi_sio
+    $ echo 2639 0300 | sudo tee /sys/bus/usb-serial/drivers/ftdi_sio/new_id
+
+
+    - The device is recognized, but I cannot ever access the device -
+
+    Make sure you are in the correct group (often dialout or uucp) in order to
+    access the device. You can test this with
+
+        $ ls -l /dev/ttyUSB0
+        crw-rw---- 1 root dialout 188, 0 May  6 16:21 /dev/ttyUSB0
+        $ groups
+        dialout audio video usb users plugdev
+
+    If you aren't in the correct group, you can fix this in two ways.
+
+    1. Add yourself to the correct group
+        You can add yourself to it by using your distributions user management
+        tool, or call
+
+            $ sudo usermod -G dialout -a $USER
+
+        Be sure to replace dialout with the actual group name if it is
+        different. After adding yourself to the group, either relogin to your
+        user, or call
+
+            $ newgrp dialout
+
+        to add the current terminal session to the group.
+
+    2. Use udev rules
+        Alternatively, put the following rule into /etc/udev/rules.d/99-custom.rules
+
+            SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ACTION=="add", GROUP="$GROUP", MODE="0660"
+
+        Change $GROUP into your desired group (e.g. adm, plugdev, or usb).
+
+
+    - The device is inaccessible for a while after plugging it in -
+
+    When having problems with the device being busy the first 20 seconds after
+    plugin, purge the modemmanager application.
+
+-[ Known Issues ]---------------------------------------------------------------
+
+    * On Red Hat, and Red Hat derived systems (like Fedora) the
+    installation directory of the shared object (/usr/local/lib) is usually
+    not included in the /etc/ld.so.conf file by default. This will result in
+    that dynamic linker is not able to find the XDA library after a system-wide
+    installation.
+
+    To overcome this you could change the installation directories by changing
+    the LIBDEST and INCLUDEDEST variables (see above) to something ldconfig
+    does search for, or add /usr/local/lib to the /etc/ld.so.conf file and
+    run ldconfig (as admin)
+
+    * The shared object file requires version 3.4.15 or higher of libstdc++.
+    Most current Linux distributions support this but we are aware of a problem
+    with Debian "squeeze" (the stable release) which uses 3.4.13. Currently
+    we have no specific work-around for this
