@@ -88,6 +88,7 @@ void jetColor(const float v, const float vmin, const float vmax, float RGB[3]);
 void Reboot_Callback(void * param, const std::vector<uint8_t>& payload);
 void EnterBootloader_Callback(void * param, const std::vector<uint8_t>& payload);
 void SetPID_Callback(void * param, const std::vector<uint8_t>& payload);
+void SetRateLimits_Callback(void * param, const std::vector<uint8_t>& payload);
 void Setpoint_Callback(void * param, const std::vector<uint8_t>& payload);
 
 int32_t encoderFront = 0;
@@ -178,8 +179,9 @@ void MainTask(void * pvParameters)
 				return copysignf(1.f, setpoint) * (feedforward_params.c - logf(1.f - fabs(setpoint) / feedforward_params.a) / feedforward_params.b);
 			},
 			SPEED_CONTROLLER_PRIORITY);  // 12 ticks pr. encoder/motor rev,  gearing ratio of 40  =  480 ticks pr. rev
-	RateLimiter rateLimit(0.05f, 15.0f, 25.0f);
+	RateLimiter rateLimiter(0.05f, 15.0f, 25.0f);
 	lspcUSB->registerCallback(lspc::MessageTypesFromPC::SetPID, &SetPID_Callback, (void *)controller);
+	lspcUSB->registerCallback(lspc::MessageTypesFromPC::SetRateLimits, &SetRateLimits_Callback, (void *)&rateLimiter);
 
 	controller->Enable();
 	controller->SetSpeed(5);
@@ -289,7 +291,7 @@ void MainTask(void * pvParameters)
 		throttle->Set(SpeedValue);
 		servo_front->Set(steering_in);
 #else
-		controller->SetSpeed(rateLimit(ControllerSetpointLocal.setpoint.angular_velocity));
+		controller->SetSpeed(rateLimiter(ControllerSetpointLocal.setpoint.angular_velocity));
 		servo_front->Set(ControllerSetpointLocal.setpoint.steering);
 #endif
 
@@ -340,6 +342,18 @@ void SetPID_Callback(void * param, const std::vector<uint8_t>& payload)
 	memcpy((uint8_t *)&msg, payload.data(), sizeof(msg));
 
 	controller->SetPID(msg.P, msg.I, msg.D);
+}
+
+void SetRateLimits_Callback(void * param, const std::vector<uint8_t>& payload)
+{
+	RateLimiter * rateLimiter = (RateLimiter *)param;
+	if (!rateLimiter) return;
+
+	volatile lspc::MessageTypesFromPC::SetRateLimits_t msg;
+	if (payload.size() != sizeof(msg)) return;
+	memcpy((uint8_t *)&msg, payload.data(), sizeof(msg));
+
+	rateLimiter->set_rate_limits(msg.max_acceleration, msg.max_deceleration);
 }
 
 void Setpoint_Callback(void * param, const std::vector<uint8_t>& payload)

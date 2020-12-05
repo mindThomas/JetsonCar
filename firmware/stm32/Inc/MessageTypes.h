@@ -32,6 +32,7 @@ namespace lspc
 			Test = 0x01,
 			SetPID = 0x02,
 			Setpoint = 0x03,
+			SetRateLimits = 0x04,
 			EnterBootloader = 0xF0,
 			Reboot = 0xF1,
 			Debug = 0xFF
@@ -49,6 +50,12 @@ namespace lspc
 			float angular_velocity;
 			float steering;
 		} Setpoint_t;
+
+		typedef struct
+		{
+			float max_acceleration;
+			float max_deceleration;
+		} SetRateLimits_t;
 
 		typedef struct
 		{

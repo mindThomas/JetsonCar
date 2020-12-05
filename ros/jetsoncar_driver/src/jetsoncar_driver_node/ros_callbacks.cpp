@@ -103,6 +103,29 @@ bool ROS_Service_SetPID(jetsoncar_interfaces::SetPID::Request &req, jetsoncar_in
     return true;
 }
 
+bool ROS_Service_SetRateLimits(jetsoncar_interfaces::SetRateLimits::Request &req, jetsoncar_interfaces::SetRateLimits::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj)
+{
+    res.acknowledged = false;
+
+    if (!lspcMutex->try_lock_for(std::chrono::milliseconds(100))) return false; // could not get lock
+
+    if (!(*lspcObj) || !(*lspcObj)->isOpen()) {
+        lspcMutex->unlock();
+        return false; // connection is not open
+    }
+
+    lspc::MessageTypesFromPC::SetRateLimits_t payload;
+    payload.max_acceleration = req.max_acceleration;
+    payload.max_deceleration = req.max_deceleration;
+    std::vector<uint8_t> payloadPacked((uint8_t *)&payload, (uint8_t *)&payload+sizeof(payload)); // this method of "serializing" requires that PC runs Little Endian (which most PC processors do = Intel x86, AMD 64 etc.)
+    (*lspcObj)->send(lspc::MessageTypesFromPC::SetRateLimits, payloadPacked);
+
+    lspcMutex->unlock();
+
+    res.acknowledged = true;
+    return true;
+}
+
 void ROS_ReconfigureCallback(jetsoncar_driver::ParametersConfig &config, uint32_t level, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj)
 {
     ROS_DEBUG("Reconfigure Request");
@@ -129,6 +152,26 @@ void ROS_ReconfigureCallback(jetsoncar_driver::ParametersConfig &config, uint32_
             ROS_ERROR("Failed to call service SetPID");
         }
     }
+
+    if (config.max_acceleration != reconfigureConfig.max_acceleration ||
+        config.max_deceleration != reconfigureConfig.max_deceleration) {
+        // Call the service to update the parameters
+        jetsoncar_interfaces::SetRateLimits::Request req;
+        jetsoncar_interfaces::SetRateLimits::Response res;
+        req.max_acceleration = config.max_acceleration;
+        req.max_deceleration = config.max_deceleration;        
+        if (ROS_Service_SetRateLimits(req, res, lspcMutex, lspcObj))
+        {
+            if (res.acknowledged)
+                ROS_INFO("Rate limits updated successfully");
+            else
+                ROS_WARN("Rate limits could not be updated");
+        }
+        else
+        {
+            ROS_ERROR("Failed to call service SetRateLimits");
+        }
+    }    
 
     MATLAB_log = config.MATLAB_log;
 

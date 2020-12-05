@@ -187,7 +187,8 @@ int main(int argc, char **argv) {
     /* Configure node services */
     ros::ServiceServer serv_reboot = n->advertiseService<jetsoncar_interfaces::Reboot::Request, jetsoncar_interfaces::Reboot::Response>("/jetsoncar/reboot", boost::bind(&ROS_Service_Reboot, _1, _2, lspcMutex, lspcObj));
     ros::ServiceServer serv_enter_bootloader = n->advertiseService<jetsoncar_interfaces::EnterBootloader::Request, jetsoncar_interfaces::EnterBootloader::Response>("/jetsoncar/enter_bootloader", boost::bind(&ROS_Service_EnterBootloader, _1, _2, lspcMutex, lspcObj));
-    ros::ServiceServer serv_set_pi = n->advertiseService<jetsoncar_interfaces::SetPID::Request, jetsoncar_interfaces::SetPID::Response>("/jetsoncar/set_pid", boost::bind(&ROS_Service_SetPID, _1, _2, lspcMutex, lspcObj));
+    ros::ServiceServer serv_set_pid = n->advertiseService<jetsoncar_interfaces::SetPID::Request, jetsoncar_interfaces::SetPID::Response>("/jetsoncar/set_pid", boost::bind(&ROS_Service_SetPID, _1, _2, lspcMutex, lspcObj));
+    ros::ServiceServer serv_set_rate_limits = n->advertiseService<jetsoncar_interfaces::SetRateLimits::Request, jetsoncar_interfaces::SetRateLimits::Response>("/jetsoncar/set_rate_limits", boost::bind(&ROS_Service_SetRateLimits, _1, _2, lspcMutex, lspcObj));
 
     /* Enable dynamic reconfigure */
     // Enable reconfigurable parameters - note that any parameters set on the node by roslaunch <param> tags will be seen by a dynamically reconfigurable node just as it would have been by a conventional node.

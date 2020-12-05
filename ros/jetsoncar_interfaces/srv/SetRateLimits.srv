@@ -1,0 +1,4 @@
+float32 max_acceleration
+float32 max_deceleration
+---
+bool acknowledged

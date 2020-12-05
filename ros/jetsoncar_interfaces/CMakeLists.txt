@@ -20,6 +20,7 @@ add_service_files(
   Reboot.srv
   EnterBootloader.srv
   SetPID.srv
+  SetRateLimits.srv
 )
 
 generate_messages(DEPENDENCIES geometry_msgs std_msgs actionlib_msgs)

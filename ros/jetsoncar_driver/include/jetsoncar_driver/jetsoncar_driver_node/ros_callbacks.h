@@ -30,6 +30,7 @@
 #include <jetsoncar_interfaces/Reboot.h>
 #include <jetsoncar_interfaces/EnterBootloader.h>
 #include <jetsoncar_interfaces/SetPID.h>
+#include <jetsoncar_interfaces/SetRateLimits.h>
 
 /* Include generated Message Types */
 #include <jetsoncar_interfaces/Encoders.h>
@@ -49,6 +50,7 @@ void ROS_Callback_Setpoint(const jetsoncar_interfaces::Setpoint::ConstPtr& msg, 
 bool ROS_Service_Reboot(jetsoncar_interfaces::Reboot::Request &req, jetsoncar_interfaces::Reboot::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
 bool ROS_Service_EnterBootloader(jetsoncar_interfaces::EnterBootloader::Request &req, jetsoncar_interfaces::EnterBootloader::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
 bool ROS_Service_SetPID(jetsoncar_interfaces::SetPID::Request &req, jetsoncar_interfaces::SetPID::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
+bool ROS_Service_SetRateLimits(jetsoncar_interfaces::SetRateLimits::Request &req, jetsoncar_interfaces::SetRateLimits::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
 void ROS_ReconfigureCallback(jetsoncar_driver::ParametersConfig &config, uint32_t level, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
 
 #endif // ROS_CALLBACKS_H
