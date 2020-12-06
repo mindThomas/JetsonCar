@@ -1,5 +1,5 @@
-#ifndef LSPC_BOOST_HPP
-#define LSPC_BOOST_HPP
+#ifndef LSPC_H
+#define LSPC_H
 
 #include <algorithm>
 #include <array>
@@ -16,6 +16,10 @@
 #include <boost/asio.hpp>
 #include <boost/asio/read.hpp>
 #include <boost/asio/serial_port.hpp>
+
+#if defined(__linux__)
+#include <linux/serial.h>
+#endif
 
 #include "lspc/Packet.hpp"
 #include "lspc/SocketBase.hpp"
@@ -55,11 +59,11 @@ namespace lspc {
 
     void open(const std::string &com_port_name);
 
-    bool send(uint8_t type, const std::vector<uint8_t> &payload);
+    bool send(uint8_t type, const std::vector<uint8_t> &payload) override;
 
     bool isOpen();
   };
 
 }  // namespace lspc
 
-#endif  // LSPC_BOOST_HPP
+#endif  // LSPC_H

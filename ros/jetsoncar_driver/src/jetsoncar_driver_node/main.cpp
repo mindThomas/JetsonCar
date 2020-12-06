@@ -18,8 +18,8 @@
 
 #include <ros/ros.h>
 
-#include "LSPC.h"
-#include "MessageTypes.h"
+#include "lspc/LSPC.h"
+#include "lspc/message_types/MessageTypes.h"
 #include <string>
 #include <thread>
 #include <boost/thread/recursive_mutex.hpp>
@@ -81,6 +81,9 @@ void LSPC_ConnectionThread(boost::shared_ptr<ros::NodeHandle> n, std::string ser
     ros::Publisher pub_mcu_debug = n->advertise<std_msgs::String>("mcu_debug", 50);
     ros::Publisher pub_mcu_load = n->advertise<std_msgs::String>("mcu_load", 50);
 
+    /* Create heartbeat-based watchdog to reset the node if no heartbeat is received */
+    ros::Timer watchdog = n->createTimer(ros::Duration(3), ROS_WatchdogTimeoutCallback);
+
     lspcMutex->lock();
     while (exitSignalObj.wait_for(std::chrono::milliseconds(1)) == std::future_status::timeout) {
         *lspcObj = new lspc::Socket; // recreate a new LSPC object
@@ -120,6 +123,7 @@ void LSPC_ConnectionThread(boost::shared_ptr<ros::NodeHandle> n, std::string ser
         /* Register callbacks */
         (*lspcObj)->registerCallback(lspc::MessageTypesToPC::Sensors, boost::bind(&LSPC_Callback_Sensors, pub_encoders, boost::ref(tf_broadcaster), boost::ref(pub_odom), _1));
         (*lspcObj)->registerCallback(lspc::MessageTypesToPC::CPUload, boost::bind(&LSPC_Callback_CPUload, pub_mcu_load, _1));
+        (*lspcObj)->registerCallback(lspc::MessageTypesToPC::Heartbeat, boost::bind(&LSPC_Callback_Heartbeat, watchdog, _1));
         (*lspcObj)->registerCallback(lspc::MessageTypesToPC::Debug, boost::bind(&LSPC_Callback_Debug, pub_mcu_debug, _1));
 
         bool MATLAB_log_prev = false;

@@ -11,14 +11,9 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <iostream>
 
-#include <boost/asio.hpp>
-#include <boost/asio/read.hpp>
-#include <boost/asio/serial_port.hpp>
 #include <boost/optional.hpp>
-
-#include "lspc/Packet.hpp"
-#include "lspc/SocketBase.hpp"
 
 namespace lspc {
 
@@ -58,16 +53,16 @@ namespace lspc {
         try {
             processIncomingByte(incoming_byte);
         }
-        catch (std::exception &e) {
+        catch (std::exception &e)
         {
-            std::cout << "LSPC: " + e.message() << std::endl;
+            std::cout << "LSPC: " << e.what() << std::endl;
             controller_port.close();
             return;
         }
         catch (...) {
             std::cout << "LSPC: Uncaught error. Closing port." << std::endl;
             controller_port.close();
-            return;   
+            return;
         }
 
 		// READ THE NEXT PACKET
@@ -147,10 +142,8 @@ namespace lspc {
 			return;
 		}
 
-		//controller_port.open(com_port_name);
-
         // From https://github.com/mavlink/mavros/blob/master/libmavconn/src/serial.cpp
-        controller_port.open(port_name_);
+        controller_port.open(com_port_name);
 
         // Set baudrate and 8N1 mode
         controller_port.set_option(boost::asio::serial_port_base::baud_rate(115200));
@@ -172,7 +165,8 @@ namespace lspc {
             tcgetattr(fd, &tio);
 
             // Set hardware flow control settings
-            if (hwflow_) {
+            bool hwflow_enabled = false;
+            if (hwflow_enabled) {
                 tio.c_iflag &= ~(IXOFF | IXON);
                 tio.c_cflag |= CRTSCTS;
             } else {

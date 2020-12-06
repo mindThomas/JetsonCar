@@ -106,6 +106,7 @@
 									<listOptionValue builtIn="false" value="../STM32-libraries/Drivers/Servo"/>
 									<listOptionValue builtIn="false" value="../STM32-libraries/Drivers/RCReceiver"/>
 									<listOptionValue builtIn="false" value="../STM32-libraries/Modules/Debug"/>
+									<listOptionValue builtIn="false" value="../STM32-libraries/Modules/Heartbeat"/>
 									<listOptionValue builtIn="false" value="../STM32-libraries/Modules/CPULoad"/>
 									<listOptionValue builtIn="false" value="../STM32-libraries/Misc/PID"/>
 									<listOptionValue builtIn="false" value="../STM32-libraries/Misc/RateLimiter"/>
@@ -194,6 +195,7 @@
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32-libraries/Misc/PID"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32-libraries/Modules/CPULoad"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32-libraries/Modules/Debug"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32-libraries/Modules/Heartbeat"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32-libraries/Modules/SpeedController"/>
 						<entry excluding="USBCDC/STM32_USB_Device_Library/Core/Src/usbd_conf_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="STM32-libraries/Periphirals/STM32F4"/>
 						<entry excluding="syscalls.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
