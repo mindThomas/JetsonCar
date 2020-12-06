@@ -30,11 +30,13 @@ namespace lspc {
 
 	Socket::~Socket() {
 		std::lock_guard<std::mutex> lock(resourceMutex_);
+        controller_port.close();
+
 		ioservice.stop();
 
 		if (ioservice_thread.joinable()) {
 			ioservice_thread.join();
-		}
+		}        
 	}
 
 	// Process incoming data on serial link
@@ -46,6 +48,7 @@ namespace lspc {
 		if (error == boost::system::errc::operation_canceled) {
 			return;
 		} else if (error) {
+            std::cout << "LSPC: " + error.message() << std::endl;
 			controller_port.close();
 			return;
 			//throw std::runtime_error("processSerial: " + error.message());
@@ -55,10 +58,16 @@ namespace lspc {
         try {
             processIncomingByte(incoming_byte);
         }
-        catch (...)
+        catch (std::exception &e) {
         {
+            std::cout << "LSPC: " + e.message() << std::endl;
             controller_port.close();
             return;
+        }
+        catch (...) {
+            std::cout << "LSPC: Uncaught error. Closing port." << std::endl;
+            controller_port.close();
+            return;   
         }
 
 		// READ THE NEXT PACKET
@@ -138,7 +147,60 @@ namespace lspc {
 			return;
 		}
 
-		controller_port.open(com_port_name);
+		//controller_port.open(com_port_name);
+
+        // From https://github.com/mavlink/mavros/blob/master/libmavconn/src/serial.cpp
+        controller_port.open(port_name_);
+
+        // Set baudrate and 8N1 mode
+        controller_port.set_option(boost::asio::serial_port_base::baud_rate(115200));
+        controller_port.set_option(boost::asio::serial_port_base::character_size(8));
+        controller_port.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
+        controller_port.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
+
+#if BOOST_ASIO_VERSION >= 101200 || !defined(__linux__)
+        // Flow control setting in older versions of Boost.ASIO is broken, use workaround (below) for now.
+        serial_dev.set_option(SPB::flow_control( (hwflow) ? SPB::flow_control::hardware : SPB::flow_control::none));
+#elif BOOST_ASIO_VERSION < 101200 && defined(__linux__)
+        // Workaround to set some options for the port manually. This is done in
+        // Boost.ASIO, but until v1.12.0 (Boost 1.66) there was a bug which doesn't enable relevant
+        // code. Fixed by commit: https://github.com/boostorg/asio/commit/619cea4356
+        {
+            int fd = controller_port.native_handle();
+
+            termios tio;
+            tcgetattr(fd, &tio);
+
+            // Set hardware flow control settings
+            if (hwflow_) {
+                tio.c_iflag &= ~(IXOFF | IXON);
+                tio.c_cflag |= CRTSCTS;
+            } else {
+                tio.c_iflag &= ~(IXOFF | IXON);
+                tio.c_cflag &= ~CRTSCTS;
+            }
+
+            // Set serial port to "raw" mode to prevent EOF exit.
+            cfmakeraw(&tio);
+
+            // Commit settings
+            tcsetattr(fd, TCSANOW, &tio);
+        }
+#endif
+
+#if defined(__linux__)
+        // Enable low latency mode on Linux
+        {
+            int fd = controller_port.native_handle();
+
+            struct serial_struct ser_info;
+            ioctl(fd, TIOCGSERIAL, &ser_info);
+
+            ser_info.flags |= ASYNC_LOW_LATENCY;
+
+            ioctl(fd, TIOCSSERIAL, &ser_info);
+        }
+#endif
 
 		if (!controller_port.is_open()) return;
 

@@ -69,6 +69,8 @@ using namespace utils;
 
 void LSPC_ConnectionThread(boost::shared_ptr<ros::NodeHandle> n, std::string serial_port, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj, std::future<void> exitSignalObj)
 {
+    bool previous_opened = false;
+
     /* Configure transform publisher and listener */
     tf::TransformBroadcaster tf_broadcaster; // maybe wrap with unique_ptr ?
     std::shared_ptr<tf::TransformListener> tf_listener = std::make_shared<tf::TransformListener>();
@@ -88,10 +90,15 @@ void LSPC_ConnectionThread(boost::shared_ptr<ros::NodeHandle> n, std::string ser
                 (*lspcObj)->open(serial_port);
             }
             catch (boost::system::system_error &e) {
+                std::cout << "Error: " << e.what() << std::endl;
+                /*if (previous_opened && e.code() == boost::system::errc::device_or_resource_busy) {
+                    throw e;
+                }*/
                 std::this_thread::sleep_for(std::chrono::seconds(1));
             }
         }
         if (!ros::ok()) break;
+        previous_opened = true;
 
         ROS_DEBUG("Connected to JetsonCar");
 
