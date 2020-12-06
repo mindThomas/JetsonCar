@@ -108,6 +108,7 @@ typedef struct {
 } ControllerSetpoint_t;
 
 #define MOTOR_SYSID	 false
+#define SAFETY_REMOTE false
 
 void MainTask(void * pvParameters)
 {
@@ -129,16 +130,18 @@ void MainTask(void * pvParameters)
 	CPULoad * cpuLoad = new CPULoad(*lspcUSB, CPULOAD_PRIORITY);
 
 	/* Initialize hardware periphirals */
+#if SAFETY_REMOTE
 	RCReceiver * rc_throttle = new RCReceiver(InputCapture::TIMER4, InputCapture::CH3);
 	RCReceiver * rc_steering = new RCReceiver(InputCapture::TIMER4, InputCapture::CH4);
+#endif
 	Servo * throttle = new Servo(PWM::TIMER1, PWM::CH1);
 	Servo * servo_front = new Servo(PWM::TIMER9, PWM::CH1, -1.0f, 1.0f, 1.2f, 1.8f);
 	Encoder * encoder_front = new Encoder(Encoder::TIMER5);
 	Encoder * encoder_back = new Encoder(Encoder::TIMER2, true);
 	IO * buzzer = new IO(GPIOA, GPIO_PIN_4);
-	PWM * red = new PWM(PWM::TIMER8, PWM::CH1, 1000, 100);
-	PWM * green = new PWM(PWM::TIMER8, PWM::CH2);
-	PWM * blue = new PWM(PWM::TIMER8, PWM::CH3);
+	PWM * red = new PWM(PWM::TIMER8, PWM::CH1, 1000, 100, true);
+	PWM * green = new PWM(PWM::TIMER8, PWM::CH2, true);
+	PWM * blue = new PWM(PWM::TIMER8, PWM::CH3, true);
 
 	/* Register general (system wide) LSPC callbacks */
 	lspcUSB->registerCallback(lspc::MessageTypesFromPC::Reboot, &Reboot_Callback);
@@ -184,7 +187,7 @@ void MainTask(void * pvParameters)
 	lspcUSB->registerCallback(lspc::MessageTypesFromPC::SetRateLimits, &SetRateLimits_Callback, (void *)&rateLimiter);
 
 	controller->Enable();
-	controller->SetSpeed(5);
+	controller->SetSpeed(0);
 	servo_front->Set(0.0f);
 #endif
 
@@ -218,6 +221,7 @@ void MainTask(void * pvParameters)
 			xSemaphoreGive( ControllerSetpoint.semaphore ); // give semaphore back
 		}
 
+#if SAFETY_REMOTE
 		if (rc_throttle->isActive())
 		{
 			throttle_in = rc_throttle->Get(true);
@@ -236,26 +240,29 @@ void MainTask(void * pvParameters)
 				ControllerSetpointLocal.setpoint.steering = steering_in;
 			}
 		} else { // RC inactive
+#endif
 			RC_Active = false;
-			if (xTaskGetTickCount() > (ControllerSetpointLocal.timestamp + 100))  // reference timeout
+			if (xTaskGetTickCount() > (ControllerSetpointLocal.timestamp + 200))  // reference timeout
 			{
 				ControllerSetpointLocal.mode = ControllerSetpoint.MANUAL;
 				ControllerSetpointLocal.timestamp = xTaskGetTickCount();
 				ControllerSetpointLocal.setpoint.angular_velocity = 0;
 				ControllerSetpointLocal.setpoint.steering = 0;
 			}
+#if SAFETY_REMOTE
 		}
+#endif
 
 		if (ControllerSetpointLocal.mode == ControllerSetpoint.MANUAL) {
 			// Red
-			red->Set(0.0);
-			green->Set(1.0);
-			blue->Set(1.0);
-		} else { // Auto
-			// Green
 			red->Set(1.0);
 			green->Set(0.0);
-			blue->Set(1.0);
+			blue->Set(0.0);
+		} else { // Auto
+			// Green
+			red->Set(0.0);
+			green->Set(1.0);
+			blue->Set(0.0);
 		}
 
 #if MOTOR_SYSID

@@ -46,13 +46,20 @@ namespace lspc {
 		if (error == boost::system::errc::operation_canceled) {
 			return;
 		} else if (error) {
-			controller_port.close();
-			return;
-			//throw std::runtime_error("processSerial: " + error.message());
+			//controller_port.close();
+			//return;
+			throw std::runtime_error("processSerial: " + error.message());
 		}
 
 		uint8_t incoming_byte = read_buffer[0];
-		processIncomingByte(incoming_byte);
+        try {
+		  processIncomingByte(incoming_byte);
+        }
+        catch (...)
+        {
+            controller_port.close();
+            return;
+        }
 
 		// READ THE NEXT PACKET
 		// Our job here is done. Queue another read.

@@ -84,16 +84,16 @@ void LSPC_Callback_Sensors(std::shared_ptr<std::ofstream> log_file, const std::v
         *log_file << std::setprecision(10) << msg->rc.steering;
 
         *log_file << "\t";
-        *log_file << std::setprecision(10) << msg->motors.throttle;
+        *log_file << std::setprecision(10) << msg->motor_outputs.throttle;
 
         *log_file << "\t";
-        *log_file << std::setprecision(10) << msg->motors.steering;
+        *log_file << std::setprecision(10) << msg->motor_outputs.steering;
 
         *log_file << "\t";
-        *log_file << std::setprecision(1) << msg->encoders.front;
+        *log_file << std::setprecision(1) << msg->wheel_angles.front;
 
         *log_file << "\t";
-        *log_file << std::setprecision(1) << msg->encoders.back;
+        *log_file << std::setprecision(1) << msg->wheel_angles.rear;
 
         *log_file << std::endl;
     }

@@ -51,8 +51,15 @@ namespace lspc {
 			//throw std::runtime_error("processSerial: " + error.message());
 		}
 
-		uint8_t incoming_byte = read_buffer[0];
-		processIncomingByte(incoming_byte);
+        uint8_t incoming_byte = read_buffer[0];
+        try {
+            processIncomingByte(incoming_byte);
+        }
+        catch (...)
+        {
+            controller_port.close();
+            return;
+        }
 
 		// READ THE NEXT PACKET
 		// Our job here is done. Queue another read.

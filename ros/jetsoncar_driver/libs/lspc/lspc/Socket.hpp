@@ -32,31 +32,6 @@ class Socket : public SocketBase {
   std::thread ioservice_thread;
   std::atomic<bool> serial_is_sending;
 
-  // Process incoming data on serial link
-  //
-  // @brief Reads the serial buffer and dispatches the received payload to the
-  // relevant message handling callback function.
-  void processSerial(const boost::system::error_code &error,
-                     std::size_t bytes_transferred) {
-    if (error == boost::system::errc::operation_canceled) {
-      return;
-    } else if (error) {
-      throw std::runtime_error("processSerial: " + error.message());
-    }
-
-    uint8_t incoming_byte = read_buffer[0];
-    processIncomingByte(incoming_byte);
-
-    // READ THE NEXT PACKET
-    // Our job here is done. Queue another read.
-    boost::asio::async_read(
-        controller_port, boost::asio::buffer(read_buffer),
-        std::bind(&Socket::processSerial, this, std::placeholders::_1,
-                  std::placeholders::_2));
-
-    return;
-  }
-
   void serialWriteCallback(const boost::system::error_code &error,
                            size_t bytes_transferred) {
     serial_is_sending = false;
