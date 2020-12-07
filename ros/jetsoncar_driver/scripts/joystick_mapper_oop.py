@@ -59,7 +59,7 @@ class JoystickMapper:
         #     rospy.loginfo(idx)
         #ax_prev = raw 
 
-    def publish_setpoint(self, axes):
+    def publish_setpoint(self, event):
         msg = Setpoint()
         msg.angular_velocity = 0
         msg.steering_angle = 0

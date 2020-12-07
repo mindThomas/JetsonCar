@@ -46,7 +46,7 @@ def joystick_callback(data):
     #     rospy.loginfo(idx)
     #ax_prev = raw 
 
-def publish_setpoint(axes):
+def publish_setpoint(event):
     msg = Setpoint()
     msg.angular_velocity = 0
     msg.steering_angle = 0

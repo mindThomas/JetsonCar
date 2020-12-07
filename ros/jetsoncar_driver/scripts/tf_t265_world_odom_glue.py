@@ -27,31 +27,46 @@ class OdomGlue:
         self.t265_odom_frame = t265_odom_frame        
 
         self.broadcaster = TransformBroadcaster()
-        self.listener = TransformListener()
-        self.listener.waitForTransform(world_frame, t265_world_frame, rospy.Time(0), rospy.Duration(100))
-        self.listener.waitForTransform(odom_frame, t265_odom_frame, rospy.Time(0), rospy.Duration(100))
+        self.tfBuffer = tf2_ros.Buffer()
+        self.listener = tf2_ros.TransformListener(self.tfBuffer)        
+        #self.listener.waitForTransform(world_frame, t265_world_frame, rospy.Time(0), rospy.Duration(100))
+        #self.listener.waitForTransform(odom_frame, t265_odom_frame, rospy.Time(0), rospy.Duration(100))
 
         rospy.Subscriber(odom_topic, nav_msgs.msg.Odometry, self.odometry_callback)
+        #self.publish_timer = rospy.Timer(rospy.Duration(0.01), self.odometry_callback)
 
     def odometry_callback(self, msg):
         world_T_t265 = None
         odom_T_t265 = None
 
+        #self.listener.waitForTransform(world_frame, t265_world_frame, rospy.Time(0), rospy.Duration(1))
+        #self.listener.waitForTransform(odom_frame, t265_odom_frame, rospy.Time(0), rospy.Duration(1))
+
         # See the tf.transformations library documentation: http://docs.ros.org/en/jade/api/tf/html/python/transformations.html
         try:
-            (trans, rot) = self.listener.lookupTransform(self.world_frame, self.t265_world_frame, rospy.Time(0))
+            #(trans, rot) = self.listener.lookupTransform(self.world_frame, self.t265_world_frame, rospy.Time(0))
+            T = self.tfBuffer.lookup_transform(self.world_frame, self.t265_world_frame, rospy.Time())
+
+            trans = (T.transform.translation.x, T.transform.translation.y, T.transform.translation.z)
+            rot = (T.transform.rotation.x, T.transform.rotation.y, T.transform.rotation.z, T.transform.rotation.w)
+
             world_T_t265 = tf.concatenate_matrices(tf.translation_matrix(trans), tf.quaternion_matrix(rot))
-            t265_T_world = tf.inverse_matrix(world_T_t265)
+            #t265_T_world = tf.inverse_matrix(world_T_t265)
         except (LookupException, ConnectivityException, ExtrapolationException):
-            rospy.logerr("Could not lookup transform")    
+            rospy.logwarn("OdomGlue: Could not lookup world to T265 transform")    
             return
 
         try:
-            (trans, rot) = self.listener.lookupTransform(self.odom_frame, self.t265_odom_frame, rospy.Time(0))
+            #(trans, rot) = self.listener.lookupTransform(self.odom_frame, self.t265_odom_frame, rospy.Time(0))
+            T = self.tfBuffer.lookup_transform(self.odom_frame, self.t265_odom_frame, rospy.Time())
+
+            trans = (T.transform.translation.x, T.transform.translation.y, T.transform.translation.z)
+            rot = (T.transform.rotation.x, T.transform.rotation.y, T.transform.rotation.z, T.transform.rotation.w)
+
             odom_T_t265 = tf.concatenate_matrices(tf.translation_matrix(trans), tf.quaternion_matrix(rot))
             t265_T_odom = tf.inverse_matrix(odom_T_t265)
         except (LookupException, ConnectivityException, ExtrapolationException):
-            rospy.logerr("Could not lookup transform")    
+            rospy.logwarn("OdomGlue: Could not lookup odom to T265 transform")    
             return
 
         world_T_odom = tf.concatenate_matrices(world_T_t265, t265_T_odom)

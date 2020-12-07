@@ -8,7 +8,7 @@
     <arg name="odom_topic"           default="/realsense_t265/odom/sample" />    
 
     <!--<node name="tf_t265_world_odom_glue" pkg="jetsoncar_driver" type="tf_t265_world_odom_glue.py" args="$(arg robot_frame) $(arg sensor_frame)" required="false" />-->
-    <node name="tf_t265_world_odom_glue" pkg="jetsoncar_driver" type="tf_t265_world_odom_glue.py" required="false">
+    <node name="tf_t265_world_odom_glue" pkg="jetsoncar_driver" type="tf_t265_world_odom_glue.py" respawn="true">
         <param name="world_frame"         type="str"   value="$(arg world_frame)" />
         <param name="t265_world_frame"    type="str"   value="$(arg t265_world_frame)" />
         <param name="odom_frame"          type="str"   value="$(arg odom_frame)" />
