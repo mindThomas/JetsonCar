@@ -47,7 +47,7 @@ git clone https://github.com/ethz-asl/image_undistort.git
 git clone https://github.com/AtsushiSakai/rosbag_to_csv.git
 
 # 4. Decawave DWM1001 (MDEK1001) node
-git clone https://github.com/mindThomas/dwm1001_ros
+git clone https://github.com/mindThomas/dwm1001_ros.git
 
 # Install automatic dependencies
 cd .. # go back to ros_ws folder

@@ -1,0 +1,14 @@
+[Unit]
+Description=SixAd Joystick service
+After=bluetooth.service
+
+[Service]
+User=root
+Type=forking
+ExecStart=/usr/bin/sixad start
+ExecStop=/usr/bin/sixad stop
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+Restart=always
+
+[Install]
+WantedBy=bluetooth.target

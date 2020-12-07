@@ -20,6 +20,10 @@ If you have not already cloned this repository you do so by using the following 
 If you have already cloned the repository but without the submodules (not recursively), you will have to initialize the submodules with:
 `git submodule update --init --recursive`
 
+# Pulling
+When updating remember to pull recursively (include the submodules):
+`git pull --recurse-submodules`
+
 # Installation
 See the `README.md` files in the respective folders such as `ros`, `simulation` and `tools/cpp`.
 
