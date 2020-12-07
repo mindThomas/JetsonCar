@@ -64,6 +64,7 @@
   <depend>realsense2_camera</depend>
   <depend>urg_node</depend>
   <depend>timed_roslaunch</depend>
+  <depend>dwm1001_ros</depend>
 
   <!--<exec_depend>zed_wrapper</exec_depend>   ZED removed for now since it is not used -->  
   <exec_depend>jetsoncar_description</exec_depend>

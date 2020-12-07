@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="serial_port" default="/dev/ttyACM0" />
+    <arg name="frame" default="lidar" />
+    <arg name="topic_group" default="dwm1001" />
+    
+    <group ns="$(arg topic_group)">
+        <node pkg="dwm1001_ros" type="dwm1001_main.py" name="dwm1001_ros" output="screen">
+            <param name="serial_port_name"      value="$(arg serial_port)" /> <!-- Name of serial port -->
+            <param name="serial_baud_rate"      value="115200" />  <!--Baudrate of serial port-->
+        </node>
+
+        <!-- Display topics of anchors and tag into markers so we can view them into Rviz-->
+        <node pkg="dwm1001_ros" type="dwm1001_displayMap.py" name="display_dwm1001" />
+    </group>
+</launch>
