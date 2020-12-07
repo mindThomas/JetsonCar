@@ -12,6 +12,8 @@ from jetsoncar_interfaces.msg import Setpoint
 from jetsoncar_interfaces.srv import SetPID as srv_SetPID
 from jetsoncar_interfaces.srv import SetRateLimits as srv_SetRateLimits
 
+###  This is just an Object Oriented implementation of joystic_mapper.py  ###
+
 class JoystickMapper:
     def __init__(self, joystick_topic, frequency):
         #ax_prev = [0]        

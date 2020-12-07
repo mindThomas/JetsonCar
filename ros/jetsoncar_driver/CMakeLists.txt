@@ -138,6 +138,9 @@ target_link_libraries(jetsoncar_driver_node ${catkin_LIBRARIES})
 install(PROGRAMS
    scripts/teleop.py
    scripts/keyboard_teleop.py
+   scripts/joystick_mapper.py
+   scripts/joystick_mapper_oop.py
+   scripts/tf_t265_world_odom_glue.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
