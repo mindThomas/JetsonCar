@@ -42,7 +42,7 @@ void DWM1001::Connect()
 
 #if BOOST_ASIO_VERSION >= 101200 || !defined(__linux__)
         // Flow control setting in older versions of Boost.ASIO is broken, use workaround (below) for now.
-        serial_dev.set_option(SPB::flow_control( (hwflow) ? SPB::flow_control::hardware : SPB::flow_control::none));
+        port_.set_option(SPB::flow_control( (hwflow) ? SPB::flow_control::hardware : SPB::flow_control::none));
 #elif BOOST_ASIO_VERSION < 101200 && defined(__linux__)
         // Workaround to set some options for the port manually. This is done in
         // Boost.ASIO, but until v1.12.0 (Boost 1.66) there was a bug which doesn't enable relevant

@@ -179,3 +179,8 @@ void ROS_ReconfigureCallback(jetsoncar_driver::ParametersConfig &config, uint32_
     reconfigureMutex.unlock();
     reconfigureServer->updateConfig(reconfigureConfig);
 }
+
+void ROS_WatchdogTimeoutCallback(const ros::TimerEvent& e)
+{
+    throw std::runtime_error("Watchdog timeout! Restarting node.");
+}

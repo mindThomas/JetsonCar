@@ -18,8 +18,8 @@
 
 #include <jetsoncar_driver/jetsoncar_driver_node/lspc_callbacks.h>
 
-#include "LSPC.h"
-#include "MessageTypes.h"
+#include "lspc/LSPC.h"
+#include "lspc/message_types/MessageTypes.h"
 
 #include "jetsoncar_driver/odometry.h"
 
@@ -152,6 +152,23 @@ void LSPC_Callback_CPUload(ros::Publisher& pubLoad, const std::vector<uint8_t>& 
     std_msgs::String msg;
     msg.data = "\n" + message;
     pubLoad.publish(msg);
+}
+
+void LSPC_Callback_Heartbeat(ros::Timer& watchdog, const std::vector<uint8_t>& payload)
+{
+    const lspc::MessageTypesToPC::Heartbeat_t * msgRaw = reinterpret_cast<const lspc::MessageTypesToPC::Heartbeat_t *>(payload.data());
+    if (sizeof(*msgRaw) != payload.size()) {
+        ROS_DEBUG("Error parsing Heartbeat message");
+        return;
+    }
+
+    //ROS_DEBUG("Received heartbeat at time %d with expected future time %d", msgRaw->timestamp_ms, msgRaw->expected_next_timestamp_ms);
+
+    float wait_time = float(msgRaw->expected_next_timestamp_ms - msgRaw->timestamp_ms) / 1000;
+
+    watchdog.stop();
+    watchdog.setPeriod(ros::Duration(1.5*wait_time)); // add a slight time buffer around the expected time before the watchdog timeout is triggered
+    watchdog.start();
 }
 
 void LSPC_Callback_ArrayDump(std::shared_ptr<std::ofstream> log_file, const std::vector<uint8_t>& payload)

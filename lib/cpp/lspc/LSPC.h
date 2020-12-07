@@ -1,5 +1,5 @@
-#ifndef LSPC_BOOST_HPP
-#define LSPC_BOOST_HPP
+#ifndef LSPC_H
+#define LSPC_H
 
 #include <algorithm>
 #include <array>
@@ -16,6 +16,10 @@
 #include <boost/asio.hpp>
 #include <boost/asio/read.hpp>
 #include <boost/asio/serial_port.hpp>
+
+#if defined(__linux__)
+#include <linux/serial.h>
+#endif
 
 #include "lspc/Packet.hpp"
 #include "lspc/SocketBase.hpp"
@@ -35,6 +39,14 @@ namespace lspc {
     // Lock guard mutex
     std::mutex resourceMutex_;
 
+    /// @brief Different ways a serial port may be flushed.
+    enum flush_type
+    {
+        flush_receive = TCIFLUSH,
+        flush_send = TCOFLUSH,
+        flush_both = TCIOFLUSH
+    };
+
     // Process incoming data on serial link
     //
     // @brief Reads the serial buffer and dispatches the received payload to the
@@ -47,6 +59,7 @@ namespace lspc {
     void readWithTimeout(SyncReadStream& s, const MutableBufferSequence& buffers, const boost::asio::deadline_timer::duration_type& expiry_time);
 
     boost::system::error_code Flush();
+    boost::system::error_code flush_serial_port(boost::asio::serial_port& serial_port, flush_type what);
 
    public:
     Socket();
@@ -55,11 +68,11 @@ namespace lspc {
 
     void open(const std::string &com_port_name);
 
-    bool send(uint8_t type, const std::vector<uint8_t> &payload);
+    bool send(uint8_t type, const std::vector<uint8_t> &payload) override;
 
     bool isOpen();
   };
 
 }  // namespace lspc
 
-#endif  // LSPC_BOOST_HPP
+#endif  // LSPC_H

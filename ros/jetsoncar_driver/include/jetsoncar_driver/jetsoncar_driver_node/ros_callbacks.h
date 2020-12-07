@@ -22,8 +22,8 @@
 #include <memory>
 #include <mutex>
 
-#include "LSPC.h"
-#include "MessageTypes.h"
+#include "lspc/LSPC.h"
+#include "lspc/message_types/MessageTypes.h"
 
 // For CLion to update/capture the changes made to generated services, message types and parameters, open the "build" folder and run "make"
 /* Include generated Services */
@@ -52,5 +52,6 @@ bool ROS_Service_EnterBootloader(jetsoncar_interfaces::EnterBootloader::Request 
 bool ROS_Service_SetPID(jetsoncar_interfaces::SetPID::Request &req, jetsoncar_interfaces::SetPID::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
 bool ROS_Service_SetRateLimits(jetsoncar_interfaces::SetRateLimits::Request &req, jetsoncar_interfaces::SetRateLimits::Response &res, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
 void ROS_ReconfigureCallback(jetsoncar_driver::ParametersConfig &config, uint32_t level, std::shared_ptr<std::timed_mutex> lspcMutex, std::shared_ptr<lspc::Socket *> lspcObj);
+void ROS_WatchdogTimeoutCallback(const ros::TimerEvent& e);
 
 #endif // ROS_CALLBACKS_H

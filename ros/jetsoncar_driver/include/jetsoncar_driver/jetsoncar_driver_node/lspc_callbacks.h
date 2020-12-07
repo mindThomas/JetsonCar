@@ -28,6 +28,7 @@
 
 void LSPC_Callback_Sensors(ros::Publisher& pubEncoders, tf::TransformBroadcaster& tfBroadcaster, ros::Publisher& pubOdom, const std::vector<uint8_t>& payload);
 void LSPC_Callback_CPUload(ros::Publisher& pubLoad, const std::vector<uint8_t>& payload);
+void LSPC_Callback_Heartbeat(ros::Timer& watchdog, const std::vector<uint8_t>& payload);
 void LSPC_Callback_ArrayDump(std::shared_ptr<std::ofstream> log_file, const std::vector<uint8_t>& payload);
 void LSPC_Callback_Debug(ros::Publisher& pubDebug, const std::vector<uint8_t>& payload);
 

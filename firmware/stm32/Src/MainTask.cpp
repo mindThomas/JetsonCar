@@ -54,6 +54,7 @@
 //#include "SlidingMode.h"
 #include "Debug.h"
 #include "CPULoad.h"
+#include "Heartbeat.h"
 //#include "COMEKF.h"
 //#include "MadgwickAHRS.h"
 //#include "QEKF.h"
@@ -128,6 +129,7 @@ void MainTask(void * pvParameters)
 	LSPC * lspcUSB = new LSPC(usb, LSPC_RECEIVER_PRIORITY, LSPC_TRANSMITTER_PRIORITY); // very important to use "new", otherwise the object gets placed on the stack which does not have enough memory!
 	Debug::AssignDebugCOM(lspcUSB); // pair debug module with configured LSPC module to enable "Debug::print" functionality
 	CPULoad * cpuLoad = new CPULoad(*lspcUSB, CPULOAD_PRIORITY);
+	Heartbeat * heartbeat = new Heartbeat(2, *lspcUSB, HEARTBEAT_PRIORITY); // 2 Hz heartbeat
 
 	/* Initialize hardware periphirals */
 #if SAFETY_REMOTE
@@ -213,7 +215,7 @@ void MainTask(void * pvParameters)
 		encoderBack = encoder_back->Get();
 
 		if (xSemaphoreTake( ControllerSetpoint.semaphore, ( TickType_t ) 1) == pdTRUE) { // lock for reading
-			if (ControllerSetpoint.timestamp > 0 && xTaskGetTickCount() < (ControllerSetpoint.timestamp + 500)) { // 500 ms
+			if (ControllerSetpoint.timestamp > 0) {
 				ControllerSetpointLocal.setpoint = ControllerSetpoint.setpoint;
 				ControllerSetpointLocal.mode = ControllerSetpoint.AUTO;
 				ControllerSetpointLocal.timestamp = ControllerSetpoint.timestamp;

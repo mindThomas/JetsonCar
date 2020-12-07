@@ -16,8 +16,6 @@
  * ------------------------------------------
  */
 
-/* OBS. Remember to keep this file consistent across the Embedded Firmware and ROS Driver */
-
 #ifndef LSPC_MESSAGE_TYPES_HPP
 #define LSPC_MESSAGE_TYPES_HPP
 
@@ -75,6 +73,7 @@ namespace lspc
 			Test = 0x01,
 			Sensors = 0x02,
 			CPUload = 0xE1,
+			Heartbeat = 0xE2,
 			Debug = 0xFF
 		} MessageTypesToPC_t;
 
@@ -107,6 +106,12 @@ namespace lspc
 				float steering;
 			} motor_outputs;
 		} Sensors_t;
+
+		typedef struct
+		{
+			uint32_t timestamp_ms;
+			uint32_t expected_next_timestamp_ms;
+		} Heartbeat_t;
 	}
 
 } // namespace lspc
