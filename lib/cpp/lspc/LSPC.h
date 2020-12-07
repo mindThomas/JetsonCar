@@ -39,6 +39,14 @@ namespace lspc {
     // Lock guard mutex
     std::mutex resourceMutex_;
 
+    /// @brief Different ways a serial port may be flushed.
+    enum flush_type
+    {
+        flush_receive = TCIFLUSH,
+        flush_send = TCOFLUSH,
+        flush_both = TCIOFLUSH
+    };
+
     // Process incoming data on serial link
     //
     // @brief Reads the serial buffer and dispatches the received payload to the
@@ -51,6 +59,7 @@ namespace lspc {
     void readWithTimeout(SyncReadStream& s, const MutableBufferSequence& buffers, const boost::asio::deadline_timer::duration_type& expiry_time);
 
     boost::system::error_code Flush();
+    boost::system::error_code flush_serial_port(boost::asio::serial_port& serial_port, flush_type what);
 
    public:
     Socket();

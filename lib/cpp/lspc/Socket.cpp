@@ -15,8 +15,8 @@
 
 #include <boost/optional.hpp>
 
-namespace lspc {
-
+namespace lspc
+{
 	Socket::Socket() : serial_is_sending(false), controller_port(ioservice) {}
 
 	Socket::Socket(const std::string &com_port_name) : serial_is_sending(false), controller_port(ioservice) {
@@ -49,28 +49,31 @@ namespace lspc {
 			//throw std::runtime_error("processSerial: " + error.message());
 		}
 
-        uint8_t incoming_byte = read_buffer[0];
-        try {
-            processIncomingByte(incoming_byte);
-        }
-        catch (std::exception &e)
-        {
-            std::cout << "LSPC: " << e.what() << std::endl;
-            controller_port.close();
-            return;
-        }
-        catch (...) {
-            std::cout << "LSPC: Uncaught error. Closing port." << std::endl;
-            controller_port.close();
-            return;
+		for (size_t i = 0; i < bytes_transferred; i++) {
+            try {
+                processIncomingByte(read_buffer[i]);
+            }
+            catch (std::exception &e) {
+                std::cout << "LSPC: " << e.what() << std::endl;
+                controller_port.close();
+                return;
+            }
+            catch (...) {
+                std::cout << "LSPC: Uncaught error. Closing port." << std::endl;
+                controller_port.close();
+                return;
+            }
         }
 
 		// READ THE NEXT PACKET
 		// Our job here is done. Queue another read.
-		boost::asio::async_read(
+		/*boost::asio::async_read(
 				controller_port, boost::asio::buffer(read_buffer),
 				std::bind(&Socket::processSerial, this, std::placeholders::_1,
-						  std::placeholders::_2));
+						  std::placeholders::_2));*/
+        controller_port.async_read_some(boost::asio::buffer(read_buffer),
+                std::bind(&Socket::processSerial, this, std::placeholders::_1,
+                          std::placeholders::_2));
 		return;
 	}
 
@@ -105,9 +108,42 @@ namespace lspc {
 	}
 
 	boost::system::error_code Socket::Flush() {
-		// From http://mnb.ociweb.com/mnb/MiddlewareNewsBrief-201303.html
+    	bool continueReading = true;
+    	while (continueReading) {
+    	    try
+    	    {
+                readWithTimeout(controller_port, boost::asio::buffer(read_buffer), boost::posix_time::milliseconds(1));
+    	    }
+			catch (boost::system::system_error& e)
+			{
+    	        continueReading = false;
+    	    }
+    	}
+	}
+
+    /// From https://stackoverflow.com/questions/22581315/how-to-discard-data-as-it-is-sent-with-boostasio/22598329#22598329
+/// @brief Flush a serial port's buffers.
+///
+/// @param serial_port Port to flush.
+/// @param what Determines the buffers to flush.
+/// @param error Set to indicate what error occurred, if any.
+    boost::system::error_code Socket::flush_serial_port(
+            boost::asio::serial_port& serial_port,
+            flush_type what)
+    {
+        if (0 == ::tcflush(serial_port.lowest_layer().native_handle(), what))
+        {
+            return boost::system::error_code();
+        }
+        else
+        {
+            return boost::system::error_code(errno,
+                                             boost::asio::error::get_system_category());
+        }
+
+        // From http://mnb.ociweb.com/mnb/MiddlewareNewsBrief-201303.html
 #if 0
-		boost::system::error_code ec;
+        boost::system::error_code ec;
 #if !defined(BOOST_WINDOWS) && !defined(__CYGWIN__)
 		const bool isFlushed =! ::tcflush(controller_port.native(), TCIOFLUSH);
 		if (!isFlushed)
@@ -121,20 +157,8 @@ namespace lspc {
             boost::asio::error::get_system_category());
 #endif
     	return ec;
-#else
-    	bool continueReading = true;
-    	while (continueReading) {
-    	    try
-    	    {
-                readWithTimeout(controller_port, boost::asio::buffer(read_buffer), boost::posix_time::milliseconds(1));
-    	    }
-			catch (boost::system::system_error& e)
-			{
-    	        continueReading = false;
-    	    }
-    	}
 #endif
-	}
+    }
 
 	void Socket::open(const std::string &com_port_name) {
 		std::lock_guard<std::mutex> lock(resourceMutex_);
@@ -200,10 +224,13 @@ namespace lspc {
 
 		Flush();
 
-		boost::asio::async_read(
-				controller_port, boost::asio::buffer(read_buffer),
-				std::bind(&Socket::processSerial, this, std::placeholders::_1,
-						  std::placeholders::_2));
+        /*boost::asio::async_read(
+                controller_port, boost::asio::buffer(read_buffer),
+                std::bind(&Socket::processSerial, this, std::placeholders::_1,
+                          std::placeholders::_2));*/
+        controller_port.async_read_some(boost::asio::buffer(read_buffer),
+                                        std::bind(&Socket::processSerial, this, std::placeholders::_1,
+                                                  std::placeholders::_2));
 
 		// Start the I/O service in its own thread.
 		ioservice_thread = std::thread([&] { ioservice.run(); });
