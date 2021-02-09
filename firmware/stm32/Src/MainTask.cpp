@@ -137,7 +137,7 @@ void MainTask(void * pvParameters)
 	RCReceiver * rc_steering = new RCReceiver(InputCapture::TIMER4, InputCapture::CH4);
 #endif
 	Servo * throttle = new Servo(PWM::TIMER1, PWM::CH1);
-	Servo * servo_front = new Servo(PWM::TIMER9, PWM::CH1, -1.0f, 1.0f, 1.2f, 1.8f);
+	Servo * servo_front = new Servo(PWM::TIMER9, PWM::CH1, -1.0f, 1.0f, 1.02f, 1.98f);
 	Encoder * encoder_front = new Encoder(Encoder::TIMER5);
 	Encoder * encoder_back = new Encoder(Encoder::TIMER2, true);
 	IO * buzzer = new IO(GPIOA, GPIO_PIN_4);
@@ -191,6 +191,10 @@ void MainTask(void * pvParameters)
 	controller->Enable();
 	controller->SetSpeed(0);
 	servo_front->Set(0.0f);
+
+	// Disable speed controller and rate limiter for now
+	controller->SetPID(0, 0, 0);
+	rateLimiter.set_rate_limits(999, 999);
 #endif
 
 	/******* APPLICATION LAYERS *******/
@@ -317,7 +321,7 @@ void MainTask(void * pvParameters)
 #else
 		msg.motor_outputs.throttle = float(int16_t(1024*controller->MotorOutput)) / 1024.f;
 #endif
-		msg.motor_outputs.steering = float(int16_t(1024*steering_in)) / 1024.f;
+		msg.motor_outputs.steering = float(int16_t(1024*ControllerSetpointLocal.setpoint.steering)) / 1024.f;
 		msg.setpoints.angular_velocity = controller->SpeedSetpoint;
 		msg.setpoints.steering = steering_in;
 		lspcUSB->TransmitAsync(lspc::MessageTypesToPC::Sensors, (uint8_t *)&msg, sizeof(msg));
