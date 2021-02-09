@@ -1,3 +1,6 @@
 [submodule "firmware/stm32/STM32-libraries"]
 	path = firmware/stm32/STM32-libraries
 	url = https://github.com/mindThomas/STM32-libraries.git
+[submodule "lib/cpp/spdlog"]
+	path = lib/cpp/spdlog
+	url = https://github.com/gabime/spdlog.git
