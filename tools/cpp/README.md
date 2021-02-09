@@ -7,6 +7,12 @@ Other prerequisites that are not installed automatically:
 sudo apt-get install libi2c-dev i2c-tools
 ```
 
+### ROS prerequisites
+If you want to use the ROS parts of the tools, ROS will have to be sourced when building and you will also have to install the following dependencies:
+```
+sudo apt-get install ros-$ROS_DISTRO-rosbag
+```
+
 ## How to build
 ```bash
 mkdir build

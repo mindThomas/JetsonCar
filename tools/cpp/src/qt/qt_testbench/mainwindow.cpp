@@ -16,26 +16,28 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tabWidget->addTab(new TestTab, "Test");
     ui->tabWidget->addTab(new Window, "OpenGL");
 
-    Qt3DExtras::Qt3DWindow * view = new Qt3DExtras::Qt3DWindow;
-    view->defaultFrameGraph()->setClearColor(QColor(QRgb(0x000000)));
+    {
+        Qt3DExtras::Qt3DWindow * view = new Qt3DExtras::Qt3DWindow;
+        view->defaultFrameGraph()->setClearColor(QColor(QRgb(0x000000)));
 
-    Qt3DCore::QEntity *scene = createTestScene();
+        Qt3DCore::QEntity *scene = createTestScene();
 
-    // Camera
-    Qt3DRender::QCamera *camera = view->camera();
-    camera->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
-    camera->setPosition(QVector3D(0, 0, 40.0f));
-    camera->setViewCenter(QVector3D(0, 0, 0));
+        // Camera
+        Qt3DRender::QCamera *camera = view->camera();
+        camera->lens()->setPerspectiveProjection(45.0f, 16.0f/9.0f, 0.1f, 1000.0f);
+        camera->setPosition(QVector3D(0, 0, 40.0f));
+        camera->setViewCenter(QVector3D(0, 0, 0));
 
-    // For camera controls
-    Qt3DExtras::QOrbitCameraController *camController = new Qt3DExtras::QOrbitCameraController(scene);
-    camController->setLinearSpeed( 50.0f );
-    camController->setLookSpeed( 180.0f );
-    camController->setCamera(camera);
+        // For camera controls
+        Qt3DExtras::QOrbitCameraController *camController = new Qt3DExtras::QOrbitCameraController(scene);
+        camController->setLinearSpeed( 50.0f );
+        camController->setLookSpeed( 180.0f );
+        camController->setCamera(camera);
 
-    view->setRootEntity(scene);
-    QWidget *container = QWidget::createWindowContainer(view);
-    ui->tabWidget->addTab(container, "Qt3D");
+        view->setRootEntity(scene);
+        QWidget *container = QWidget::createWindowContainer(view);
+        ui->tabWidget->addTab(container, "Qt3D");
+    }
 
     ui->tabWidget->addTab(qglViewer, "QGLViewer");
     ui->tabWidget->addTab(qglVisualizer, "QGLVisualizer");

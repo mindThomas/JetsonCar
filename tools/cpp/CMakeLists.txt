@@ -71,7 +71,7 @@ find_package(PkgConfig)
 if(CMAKE_BUILD_TYPE STREQUAL "")
   unset(CMAKE_BUILD_TYPE CACHE) # no ambiguity
 endif()
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "RelWithDebInfo, Release or Debug")
+set(CMAKE_BUILD_TYPE "Release" CACHE STRING "RelWithDebInfo, Release or Debug")
 
 message(STATUS "Default Compile flags [current build: ${CMAKE_BUILD_TYPE}]")
 message(STATUS "  CMAKE_C_FLAGS_DEBUG: ${CMAKE_C_FLAGS_DEBUG}")
@@ -104,6 +104,9 @@ include(cmake_common/mrpt/mrpt.cmake)
 include(cmake_common/g2o/g2o.cmake) # depends on qglviewer which should thus be loaded before
 include(cmake_common/apriltag/apriltag.cmake)
 #include(cmake_common/brisk/brisk.cmake)
+
+option(SPDLOG_BUILD_SHARED "" OFF)
+add_subdirectory(../../lib/cpp/spdlog  "lib/spdlog")
 
 message(STATUS "   Eigen include directory: ${EIGEN3_INCLUDE_DIR}")
 message(STATUS "   OpenCV path: ${OpenCV_INCLUDE_DIRS}")
@@ -144,8 +147,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__SOURCE_FOLDER__='\"$(dir $(abspath $
 
 # Place the executable in the root of build folder
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/libs")
-
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/libs") # shared libs
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/libs") # static libs
 
 # Define Global Headers placed in include folder
 set(GLOBAL_HEADERS "")
@@ -159,11 +162,20 @@ ENDMACRO()
 
 # Include libraries
 MACRO(CMAKE_COMMON_LIBS_DIRECTORIES return_list)
+    set(EXCLUDE_DIRS spdlog)
     FILE(GLOB_RECURSE new_list ../../lib/cpp/CMakeLists.txt)
     SET(dir_list "")
     FOREACH(file_path ${new_list})
-        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)        
-    SET(dir_list ${dir_list} ${dir_path})
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)         
+        FOREACH(EXCLUDE_DIR ${EXCLUDE_DIRS})
+            string (FIND ${dir_path} ${EXCLUDE_DIR} EXCLUDE_DIR_FOUND)  
+            if (NOT ${EXCLUDE_DIR_FOUND} EQUAL -1)
+                break()
+            endif()
+        ENDFOREACH()        
+        if (${EXCLUDE_DIR_FOUND} EQUAL -1)
+            SET(dir_list ${dir_list} ${dir_path})
+        endif()
     ENDFOREACH()
     LIST(REMOVE_DUPLICATES dir_list)
     SET(${return_list} ${dir_list})
@@ -179,7 +191,7 @@ MACRO(CMAKE_LIBS_DIRECTORIES return_list)
         string (FIND ${dir_path} ${EXCLUDE_LIBS_DIR} EXCLUDE_LIBS_DIR_FOUND)
         if (${EXCLUDE_INCLUDE_DIR_FOUND} EQUAL -1 AND ${EXCLUDE_LIBS_DIR_FOUND} EQUAL -1)
             SET(dir_list ${dir_list} ${dir_path})
-    endif ()
+        endif ()
     ENDFOREACH()
     LIST(REMOVE_DUPLICATES dir_list)
     LIST(REMOVE_ITEM dir_list ${CMAKE_CURRENT_SOURCE_DIR})
@@ -289,6 +301,13 @@ MACRO(prepare_qt_binary)
     FILE(GLOB_RECURSE binary_sources_ui *.ui) # find all ui files
     FILE(GLOB_RECURSE binary_sources_qrc *.qrc) # find all Qt Ressource files
     FILE(GLOB_RECURSE binary_headers *.hpp) # find all hpp files
+
+    #file(GLOB QT_FORMS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.ui)
+    #file(GLOB QT_RESOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.qrc)
+    #QT5_ADD_RESOURCES(QT_RESOURCES_CPP ${QT_RESOURCES})
+    #QT5_WRAP_UI(QT_FORMS_HPP ${QT_FORMS})
+    #add_executable(qt_rosbag ${QT_SOURCES} ${QT_RESOURCES_CPP} ${QT_FORMS_HPP} ${QT_MOC_HPP})
+
     #message(STATUS "        Binary sources: " ${binary_sources})
     #message(STATUS "        Binary headers: " ${binary_headers})
     #message(STATUS "        Global headers: " ${GLOBAL_HEADERS})

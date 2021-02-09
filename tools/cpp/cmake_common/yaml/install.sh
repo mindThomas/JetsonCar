@@ -24,7 +24,7 @@ cd ${YAML_BUILD_PATH}
 cmake ..
 make
 
-BUILD_PATH=${YAML_BUILD_PATH}/src/libpangolin.so
+BUILD_PATH=${YAML_BUILD_PATH}/libyaml.so
 
 if [ ! -f ${BUILD_PATH} ] ; then # build does not exist
 	echo "Unsucessfull YAML build"

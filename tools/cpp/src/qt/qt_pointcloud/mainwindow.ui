@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>424</width>
-    <height>334</height>
+    <width>310</width>
+    <height>209</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>QT Testbench</string>
+   <string>Test GUI</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -28,11 +28,7 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="currentIndex">
-       <number>-1</number>
-      </property>
-     </widget>
+     <widget class="QGLVisualizer" name="qglVisualizer" native="true"/>
     </item>
    </layout>
   </widget>
@@ -41,25 +37,33 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>424</width>
+     <width>310</width>
      <height>24</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
+   <widget class="QMenu" name="menuOpen_PCD">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionOpen_PCD_file"/>
+    <addaction name="actionOpen_PCD"/>
    </widget>
-   <addaction name="menuFile"/>
+   <addaction name="menuOpen_PCD"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen_PCD_file">
+  <action name="actionOpen_PCD">
    <property name="text">
-    <string>Open PCD file</string>
+    <string>Open PCD</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QGLVisualizer</class>
+   <extends>QWidget</extends>
+   <header>QGLVisualizer.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
  <slots>

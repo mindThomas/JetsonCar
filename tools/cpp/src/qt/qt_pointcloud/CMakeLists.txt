@@ -1,20 +1,16 @@
 # Edit the configuration line below to match binary needs
-set(binary_dependencies    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSupport
-    Qt5::OpenGL
-    Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras   
-    ${QGLVIEWER_LIBRARY}    
-    ${Boost_LIBRARIES}
-    ${PCL_LIBRARIES}
+set(binary_dependencies    Qt5::Widgets  easy_profiler
     QGLVisualizer
-    jetsoncar_utils
-    )
+    ${PCL_LIBRARIES}
+    jetsoncar_utils)
 
 # Configure build as release (for maximum optimization) 
 #set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 #set(CMAKE_BUILD_TYPE "Debug")
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}) # to fix widget inclusion problem
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBUILD_WITH_EASY_PROFILER")
+
 prepare_qt_binary()
 
 # But still add debug information (-g flag)

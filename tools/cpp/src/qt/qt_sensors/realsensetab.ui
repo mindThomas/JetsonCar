@@ -114,7 +114,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <widget class="QGLVisualizer" name="visualizerLeft">
+        <widget class="QGLVisualizer" name="visualizerLeft" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
            <horstretch>0</horstretch>
@@ -124,7 +124,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGLVisualizer" name="visualizerRight"/>
+        <widget class="QGLVisualizer" name="visualizerRight" native="true"/>
        </item>
       </layout>
      </item>
@@ -135,8 +135,9 @@
  <customwidgets>
   <customwidget>
    <class>QGLVisualizer</class>
-   <extends>QOpenGLWidget</extends>
+   <extends>QWidget</extends>
    <header>QGLVisualizer.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

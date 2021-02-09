@@ -2,7 +2,7 @@
 find_package(QGLViewer)
 if (${QGLVIEWER_FOUND})
 	message(STATUS "QGLViewer found")
-message("QGLVIEWER_INCLUDE_DIRS: ${QGLVIEWER_INCLUDE_DIR}")
+    message("QGLVIEWER_INCLUDE_DIRS: ${QGLVIEWER_INCLUDE_DIR}")
 else()
 	message(STATUS "QGLViewer not found! Executing install script.")
 	execute_process(COMMAND ${CMAKE_CURRENT_LIST_DIR}/install.sh

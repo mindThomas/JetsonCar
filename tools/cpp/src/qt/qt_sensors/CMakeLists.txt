@@ -9,7 +9,7 @@ set(binary_dependencies    Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSu
     QGLVisualizer
     realsense    
     imu_spatial    
-    utils
+    jetsoncar_utils
     )
 
 if (${ZED_FOUND})    

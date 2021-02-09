@@ -445,6 +445,11 @@ void QGLVisualizer::AddPointcloud(const std::string pointcloud_name, uint8_t siz
 {
     boost::lock_guard<boost::mutex> guard(frame_mtx); // protect the access to pc_gl during this function
 
+    QGLVisualizer::pointcloud_t * existPtr = FindPointcloud(pointcloud_name);
+    if (existPtr) {
+        throw std::runtime_error("Pointcloud name already exists");
+    }
+
     QGLVisualizer::pointcloud_t pointcloud;
     pointcloud.name = pointcloud_name;
     pointcloud.pc.reset();

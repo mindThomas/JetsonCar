@@ -15,11 +15,17 @@ set(library_dependencies
   Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSupport
   Qt5::OpenGL
   Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras 
-  ${Pangolin_LIBRARIES}
+  ${QGLVIEWER_LIBRARY}
   ${Eigen_LIBRARIES}
   ${OpenCV_LIBRARIES}
   ${Boost_LIBRARIES}
   ${PCL_LIBRARIES}
+)
+
+set(public_library_dependencies
+  Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Xml Qt5::PrintSupport
+  Qt5::OpenGL
+  Qt5::3DCore Qt5::3DRender Qt5::3DInput Qt5::3DExtras
 )
 
 FILE(GLOB_RECURSE binary_sources_c *.c) # find all c files
@@ -32,6 +38,7 @@ FILE(GLOB_RECURSE general_headers *.h) # find all h files
 # Add the library - change SHARED/STATIC according to the requirement
 add_library( ${library_name} STATIC ${binary_sources_c} ${binary_sources_cpp} ${GLOBAL_HEADERS} )
 target_link_libraries( ${library_name} ${library_dependencies} )
+#target_link_libraries( ${library_name} PUBLIC ${public_library_dependencies} )
 target_include_directories( ${library_name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set_target_properties( ${library_name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra" )
