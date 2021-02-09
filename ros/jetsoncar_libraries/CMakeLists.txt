@@ -113,18 +113,27 @@ mark_as_advanced(
 # )
 
 # Hack to get to the ros_ws/src/lib folder created as a symlink (see README.md)
-set("library_directory" "${CATKIN_DEVEL_PREFIX}/../../../src/lib")
+set(LIB_DIR "${CATKIN_DEVEL_PREFIX}/../../../src/lib")
+set(EXCLUDE_DIRS spdlog)
 
 # Include libraries
 MACRO(CMAKE_COMMON_LIBS_DIRECTORIES return_list)
-    FILE(GLOB_RECURSE new_list ${library_directory}/CMakeLists.txt)
+    FILE(GLOB_RECURSE new_list ${LIB_DIR}/CMakeLists.txt)
     SET(dir_list "")
     FOREACH(file_path ${new_list})
-        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)        
-	SET(dir_list ${dir_list} ${dir_path})
+        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)         
+        FOREACH(EXCLUDE_DIR ${EXCLUDE_DIRS})
+            string (FIND ${dir_path} ${EXCLUDE_DIR} EXCLUDE_DIR_FOUND)  
+            if (NOT ${EXCLUDE_DIR_FOUND} EQUAL -1)
+                break()
+            endif()
+        ENDFOREACH()        
+        if (${EXCLUDE_DIR_FOUND} EQUAL -1)
+            SET(dir_list ${dir_list} ${dir_path})
+        endif()
     ENDFOREACH()
     LIST(REMOVE_DUPLICATES dir_list)
-    SET(${return_list} ${dir_list})
+    SET(${return_list} ${dir_list})    
 ENDMACRO()
 
 CMAKE_COMMON_LIBS_DIRECTORIES(SUBDIRS)
@@ -139,6 +148,13 @@ if (NOT ZED_FOUND)
     list(REMOVE_ITEM JETSONCAR_LIBRARIES "zed") # not used for now by the ROS subsystem
 endif()
 
+# Add SPDLOG
+option(SPDLOG_BUILD_SHARED "" OFF)
+add_subdirectory(${LIB_DIR}/spdlog  "lib/spdlog")
+#get_target_property(SPDLOG_INCLUDE_DIRS spdlog INCLUDE_DIRECTORIES)
+get_target_property(SPDLOG_SOURCE_DIR spdlog SOURCE_DIR)
+set(SPDLOG_INCLUDE_DIR ${SPDLOG_SOURCE_DIR}/include)
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -149,15 +165,15 @@ endif()
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-  INCLUDE_DIRS ${library_directory} ${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS}
+  INCLUDE_DIRS ${LIB_DIR} ${EIGEN3_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} ${SPDLOG_INCLUDE_DIR}
   LIBRARIES ${JETSONCAR_LIBRARIES} # easy_profiler realsense2
   CATKIN_DEPENDS roscpp
   DEPENDS Boost OpenCV CURL EIGEN3 GFLAGS PCL
 )
-
 ## OBS! The order is important. 'catkin_package' has to come before all 'add_executable' and 'add_library'!
 
-include_directories(${library_directory})
+include_directories(${LIB_DIR})
+
 message(STATUS "Adding common libraries:")
 FOREACH(subdir ${SUBDIRS})
   get_filename_component(subdir_name "${subdir}" NAME)
@@ -178,7 +194,7 @@ include_directories(
   ${EIGEN3_INCLUDE_DIR}
   ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
-  ${library_directory}
+  ${LIB_DIR}
 )
 
 ## Declare a C++ library

@@ -54,7 +54,7 @@
 #include "jetsoncar_driver/jetsoncar_driver_node/lspc_callbacks.h"
 #include "jetsoncar_driver/odometry.h"
 
-#include <utils/utils.h>
+#include <jetsoncar_utils/jetsoncar_utils.h>
 
 /* Include messages */
 #include <geometry_msgs/Twist.h>
