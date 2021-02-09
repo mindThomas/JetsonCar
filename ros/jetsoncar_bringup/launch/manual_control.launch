@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find jetsoncar_bringup)/launch/minimal_with_sensors.launch"/>
+    <include file="$(find jetsoncar_driver)/launch/joystick.launch"/>
+
+</launch>

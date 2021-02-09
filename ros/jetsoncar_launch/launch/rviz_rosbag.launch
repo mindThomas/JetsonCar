@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
 
-	<node name="rviz_visualizer" pkg="rviz" type="rviz" required="true" args="-d $(find jetsoncar_description)/rviz/tf_display.rviz"/>
+	<node name="rviz_visualizer" pkg="rviz" type="rviz" required="true" args="-d $(find jetsoncar_description)/rviz/world.rviz"/>
 
-	<param name="robot_description" command="$(find xacro)/xacro '$(find jetsoncar_description)/urdf/kugle.xacro'" />
+	<param name="robot_description" command="$(find xacro)/xacro '$(find jetsoncar_description)/urdf/jetsoncar.xacro'" />
 
 </launch>

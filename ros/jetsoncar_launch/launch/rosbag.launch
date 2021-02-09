@@ -12,6 +12,6 @@
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
 	<!-- Start the log playback -->
-	<node name="bag_playback" pkg="rosbag" type="play" required="true" args="--clock --loop '$(arg bag)'"/>
+    <node name="bag_playback" pkg="rosbag" type="play" required="true" args="--clock --loop '$(arg bag)'"/> <!-- Alternative is rqt_bag but that appears very slow -->
 
 </launch>

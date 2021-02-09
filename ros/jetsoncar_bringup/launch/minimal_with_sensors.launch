@@ -19,6 +19,7 @@
     <include file="$(find jetsoncar_sensors)/launch/imu_i2c.launch"/>
     <include file="$(find jetsoncar_sensors)/launch/hokuyo_lidar.launch"/>
     <include file="$(find jetsoncar_sensors)/launch/xsens.launch"/>    
+    <include file="$(find jetsoncar_sensors)/launch/dwm1001.launch"/>    
 
     <node pkg="tf" type="static_transform_publisher" name="world_odom" args="0 0 0 0 0 0 /world /realsense_t265_odom_frame 100"/>
 

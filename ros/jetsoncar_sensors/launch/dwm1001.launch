@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="serial_port" default="/dev/ttyACM0" />
+    <arg name="serial_port" default="/dev/dwm1001" />
     <arg name="frame" default="lidar" />
     <arg name="topic_group" default="dwm1001" />
     

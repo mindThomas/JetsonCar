@@ -1,0 +1,1 @@
+This package contains C++ and Python tools with ROS dependencies but which are not intended to be run as nodes. I.e. bag processing scripts.

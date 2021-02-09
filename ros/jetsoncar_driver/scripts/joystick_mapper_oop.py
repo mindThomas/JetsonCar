@@ -15,8 +15,7 @@ from jetsoncar_interfaces.srv import SetRateLimits as srv_SetRateLimits
 ###  This is just an Object Oriented implementation of joystic_mapper.py  ###
 
 class JoystickMapper:
-    def __init__(self, joystick_topic, frequency):
-        #ax_prev = [0]        
+    def __init__(self, joystick_topic, frequency):        
         self.ax = {} # prepare dictionary
 
         self.SetPID(0, 0, 0)
@@ -29,8 +28,7 @@ class JoystickMapper:
         self.pub_setpoint = rospy.Publisher('setpoint', Setpoint, queue_size=10)
         self.publish_timer = rospy.Timer(rospy.Duration(1.0 / frequency), self.publish_setpoint)
 
-    def joystick_callback(self, data):
-        #global ax_prev
+    def joystick_callback(self, data):        
         raw = np.array(data.axes)
         #rospy.loginfo(raw)
 
